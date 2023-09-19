@@ -3,7 +3,7 @@ public class CoordData {
     public int TrailValue;
 
     public CoordData(int height) {
-        Height = 1; //height;
+        Height = 1;
         TrailValue = 0  ;
     }
 }

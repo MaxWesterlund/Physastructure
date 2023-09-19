@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Github Repos\\SPIS\\SPIS.csproj": {}
+    "D:\\Github Repos\\SPIS\\SPIS.csproj": {}
   },
   "projects": {
-    "d:\\Github Repos\\SPIS\\SPIS.csproj": {
+    "D:\\Github Repos\\SPIS\\SPIS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Github Repos\\SPIS\\SPIS.csproj",
+        "projectUniqueName": "D:\\Github Repos\\SPIS\\SPIS.csproj",
         "projectName": "SPIS",
-        "projectPath": "d:\\Github Repos\\SPIS\\SPIS.csproj",
+        "projectPath": "D:\\Github Repos\\SPIS\\SPIS.csproj",
         "packagesPath": "C:\\Users\\maxwe\\.nuget\\packages\\",
-        "outputPath": "d:\\Github Repos\\SPIS\\obj\\",
+        "outputPath": "D:\\Github Repos\\SPIS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\maxwe\\AppData\\Roaming\\NuGet\\NuGet.Config",

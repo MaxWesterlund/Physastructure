@@ -1,3 +1,5 @@
-﻿Visuals visuals = new();
+﻿using Raylib_cs;
 
-visuals.Draw();
+Simulation simulation = new();
+
+simulation.Loop();
