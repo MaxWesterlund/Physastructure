@@ -1,5 +1,3 @@
-using System.Numerics;
-
 static class Settings {
     public const int WIDTH = 711;
     public const int HEIGHT = 400;
