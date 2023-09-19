@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj": {}
+    "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj": {
+    "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
+        "projectUniqueName": "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
         "projectName": "SPIS",
-        "projectPath": "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
+        "projectPath": "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
         "packagesPath": "C:\\Users\\Max Westerlund\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\obj\\",
+        "outputPath": "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Max Westerlund\\AppData\\Roaming\\NuGet\\NuGet.Config"

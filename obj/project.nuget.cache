@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tndUYBfZ3RHtJJJ4XiReksOxKLrDY4NMHpC14ZrKMGdHRrPEpRSdUwcum5El1yLhOVH3PXSZgf53QTvp7i9axg==",
+  "dgSpecHash": "HRGG54xD1DgjeIslP3RA3b3r4CKeAI+/kszW1YdcRnCGNf5iC6MNzYK83rcOF5btrghArEkjTOegiQWNd/uiaw==",
   "success": true,
-  "projectFilePath": "c:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
+  "projectFilePath": "C:\\Users\\Max Westerlund\\Documents\\GitHub\\SPIS\\SPIS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Max Westerlund\\.nuget\\packages\\raylib-cs\\4.5.0.4\\raylib-cs.4.5.0.4.nupkg.sha512",
     "C:\\Users\\Max Westerlund\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512"
