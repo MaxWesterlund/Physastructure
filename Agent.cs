@@ -33,7 +33,7 @@ public class Agent {
         YCoord = Math.Clamp(YCoord, 0, Settings.HEIGHT - 1);
 
         if (XCoord == 0 || XCoord == Settings.WIDTH - 1 || YCoord == 0 || YCoord == Settings.HEIGHT - 1) {
-            Heading += Settings.AgentSensorAngle;
+            Heading += Settings.AgentSensorAngle * new Random().Next(0, 2) == 1 ? 1 : -1;
         }
         else if (center == left && left == right) {
             Heading += Settings.AgentSensorAngle * new Random().Next(-1, 2);

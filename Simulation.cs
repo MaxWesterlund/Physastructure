@@ -7,9 +7,13 @@ public class Simulation {
         Agent[] agents = new Agent[Settings.AgentAmount];
         InitAgents(ref agents);
         float[,] decayMap = new float[Settings.WIDTH, Settings.HEIGHT];
+
+        int progress = 0;
         while (!Raylib.WindowShouldClose()) {
             UpdateAgents(ref agents, decayMap);
-            Draw(agents, decayMap);
+            if (progress++ % Settings.DRAW_INTERVAL == 0) {
+                Draw(agents, decayMap);
+            }
         }
 
         Raylib.CloseWindow();
@@ -50,8 +54,8 @@ public class Simulation {
                 if (value == 0) {
                     continue;
                 }
-                int p = (int)Math.Round(MathF.Pow(value, 10) * 255f);
-                Color color = value == 0 ? Color.BLACK : new Color(p, p, 0, 255);
+                int p = (int)Math.Round(MathF.Pow(value, 1) * 255f);
+                Color color = value == 0 ? Color.BLACK : new Color(p, 0, 0, 255);
                 Raylib.DrawRectangle(x * Settings.RES, y * Settings.RES, Settings.RES, Settings.RES, color);
             }
         }
