@@ -6,13 +6,14 @@ public class Simulation {
 
         Agent[] agents = new Agent[Settings.AgentAmount];
         InitAgents(ref agents);
-        float[,] decayMap = new float[Settings.WIDTH, Settings.HEIGHT];
+        CoordData[,] map = new CoordData[Settings.WIDTH, Settings.HEIGHT];
+        InitMap(ref map);
 
         int progress = 0;
         while (!Raylib.WindowShouldClose()) {
-            UpdateAgents(ref agents, decayMap);
+            UpdateAgents(ref agents, map);
             if (progress++ % Settings.DRAW_INTERVAL == 0) {
-                Draw(agents, decayMap);
+                Draw(agents, map);
             }
         }
 
@@ -29,36 +30,61 @@ public class Simulation {
         }
     }
 
-    void UpdateAgents(ref Agent[] agents, float[,] decayMap) {
-        foreach (Agent agent in agents) {
-            agent.Move(decayMap);
-        }
-        foreach (Agent agent in agents) {
-            decayMap[agent.XCoord, agent.YCoord] = 1;
-        }
+    void InitMap(ref CoordData[,] map) {
         for (int y = 0; y < Settings.HEIGHT; y++) {
             for (int x = 0; x < Settings.WIDTH; x++) {
-                decayMap[x, y] *= Settings.SporeDecayRate;
+                map[x, y] = new CoordData(new Random().NextDouble() < 0.0001);
             }
         }
     }
 
-    void Draw(Agent[] agents, float[,] decayMap) {
-        
+    void UpdateAgents(ref Agent[] agents, CoordData[,] map) {
+        foreach (Agent agent in agents) {
+            agent.Move(map);
+        }
+        foreach (Agent agent in agents) {
+            CoordData coord = map[agent.XCoord, agent.YCoord];
+            coord.SporeStrength = 1;
+            if (coord.IsPoint) {
+                agent.PheremoneStrength = 1;
+            }
+            if (agent.PheremoneStrength > 0) {
+                coord.PheremoneStrength = 1;
+            } 
+        }
+        for (int y = 0; y < Settings.HEIGHT; y++) {
+            for (int x = 0; x < Settings.WIDTH; x++) {
+                map[x, y].Decay();
+            }
+        }
+    }
+
+    void Draw(Agent[] agents, CoordData[,] map) {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Color.BLACK);
         
         for (int y = 0; y < Settings.HEIGHT; y++) {
             for (int x = 0; x < Settings.WIDTH; x++) {
-                float value = decayMap[x, y];
-                if (value == 0) {
+                CoordData coord = map[x, y];
+                Color color;
+                
+                if (coord.IsPoint) {
+                    color = Color.WHITE;
+                }
+                else if (coord.SporeStrength == 0) {
                     continue;
                 }
-                int p = (int)Math.Round(MathF.Pow(value, 1) * 255f);
-                Color color = value == 0 ? Color.BLACK : new Color(p, 0, 0, 255);
+                else {
+                    int r = (int)Math.Round(MathF.Pow(coord.SporeStrength, 1) * 255f);
+                    int b = (int)Math.Round(MathF.Pow(coord.PheremoneStrength, 1) * 255f);
+                    color = coord.SporeStrength == 0 ? Color.BLACK : new Color(r, 0, b, 255);
+                }
+
+
                 Raylib.DrawRectangle(x * Settings.RES, y * Settings.RES, Settings.RES, Settings.RES, color);
             }
         }
+
         Debug();
         Raylib.EndDrawing();
     }

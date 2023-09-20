@@ -1,10 +1,20 @@
 public class CoordData {
     public int Height;
-    public int TrailValue;
+    public float SporeStrength;
+    public float PheremoneStrength;
+    public bool IsPoint;
 
-    public CoordData(int height) {
-        Height = 1;
-        TrailValue = 0  ;
+    public CoordData(bool isPoint) {
+        Height = 0;
+        SporeStrength = 0;
+        PheremoneStrength = 0;
+        IsPoint = isPoint;
+    }
+
+    public void Decay() {
+        SporeStrength *= Settings.SporeDecayRate;
+        PheremoneStrength *= Settings.PheremoneDecayRate;
+        return;
     }
 }
 
