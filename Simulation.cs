@@ -42,6 +42,8 @@ public class Simulation {
     void Draw(Agent[] agents, float[,] decayMap) {
         
         Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.BLACK);
+        
         for (int y = 0; y < Settings.HEIGHT; y++) {
             for (int x = 0; x < Settings.WIDTH; x++) {
                 float value = decayMap[x, y];
@@ -53,6 +55,11 @@ public class Simulation {
                 Raylib.DrawRectangle(x * Settings.RES, y * Settings.RES, Settings.RES, Settings.RES, color);
             }
         }
+        Debug();
         Raylib.EndDrawing();
+    }
+
+    void Debug() {
+        Raylib.DrawText(Raylib.GetFPS().ToString(), 10, 10, 20, Color.WHITE);
     }
 }
