@@ -14,10 +14,8 @@ public static class Draw {
                 }
                 avg /= Settings.Res * Settings.Res;
                 int r = (int)(avg * 255);
-                int g = (int)((1 - avg) * 255);
-                int b = (int)((1 - avg) * avg * 255); 
 
-                Color color = new Color(r, g, b, 255);
+                Color color = new Color(r, 0, 0, 255);
 
                 Raylib.DrawRectangle(x * Settings.PxlPosScaling, y * Settings.PxlPosScaling, Settings.Res * 2, Settings.Res * 2, color);
             }

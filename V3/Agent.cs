@@ -11,7 +11,7 @@ public class Agent {
         dir = new Vector2((float)Math.Cos(a), (float)Math.Sin(a));
     }
 
-    public void Move() {
+        public void Move(in float[,] decayMap) {
         pos += Settings.AgentSpeed * dir;
         if (pos.X < 0 || pos.X >= Settings.Size || pos.X < 0 || pos.X >= Settings.Size) {
             dir.X *= -1;

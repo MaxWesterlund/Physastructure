@@ -1,7 +1,7 @@
 public static class Settings {
     public const int ScrnSize = 800;
     public const int Size = 800; // Can't be larger than ScrnSize.
-    public const int Res = 16;
+    public const int Res = 4;
 
     public const int PxlAmnt = Size / Res;
     public const int Ratio = ScrnSize / Size;
