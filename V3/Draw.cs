@@ -1,7 +1,7 @@
 using Raylib_cs;
 
 public static class Draw {
-    public static void DrawDecayMap(float[,] decayMap) {
+    public static void DrawPheremoneMap(float[,] PheremoneMap) {
         for (int y = 0; y < Settings.PxlAmnt; y++) {
             for (int x = 0; x < Settings.PxlAmnt; x++) {
                 float avg = 0;
@@ -9,7 +9,7 @@ public static class Draw {
                     for (int x2 = 0; x2 < Settings.Res; x2++) {
                         int xCoord = x * Settings.Res + x2;
                         int yCoord = y * Settings.Res + y2;
-                        avg += decayMap[xCoord, yCoord];
+                        avg += PheremoneMap[xCoord, yCoord];
                     }
                 }
                 avg /= Settings.Res * Settings.Res;
@@ -17,7 +17,7 @@ public static class Draw {
 
                 Color color = new Color(r, 0, 0, 255);
 
-                Raylib.DrawRectangle(x * Settings.PxlPosScaling, y * Settings.PxlPosScaling, Settings.Res * 2, Settings.Res * 2, color);
+                Raylib.DrawRectangle(x * Settings.PxlPosScaling, y * Settings.PxlPosScaling, Settings.Ratio * Settings.Res, Settings.Ratio * Settings.Res, color);
             }
         }
     }

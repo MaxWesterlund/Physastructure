@@ -3,8 +3,6 @@ using System.Numerics;
 
 public class Simulation {
     public void Run() {
-        float[,] decayMap = new float[Settings.Size, Settings.Size];
-
         Agent[] agents = new Agent[Settings.AgentAmnt];
         for (int i = 0; i < agents.Length; i++) {
             float p = (float)i / Settings.AgentAmnt;
@@ -14,36 +12,34 @@ public class Simulation {
         Raylib.InitWindow(Settings.ScrnSize, Settings.ScrnSize, "SPIS");
 
         while (!Raylib.WindowShouldClose()) {
+            // Shuffle(ref agents);
             foreach (Agent agent in agents) {
                 agent.Move();
-                agent.LeaveSpore(ref decayMap);
+                agent.LeaveSpore();
             }
 
             Raylib.BeginDrawing();
 
             Raylib.ClearBackground(Color.BLACK);
-            Draw.DrawDecayMap(decayMap);
+            Draw.DrawPheremoneMap(Map.PheremoneMap);
             Draw.DrawDebug();
 
             Raylib.EndDrawing();
 
-            Map.Decay(ref decayMap);
+            Map.Decay();
         }
 
         Raylib.CloseWindow();
     }
 
-    float[,] GenerateDecayMap() {
-        float[,] map = new float[Settings.Size, Settings.Size];
-        for (int y = 0; y < Settings.Size; y++) {
-            for (int x = 0; x < Settings.Size; x++) {
-                int xDist = Settings.Size / 2 - x;
-                int yDist = Settings.Size / 2 - y;
-                float dist = (float)Math.Sqrt(xDist * xDist + yDist * yDist);
-                float value = Math.Clamp(1 - (dist / (Settings.Size / 2)), 0, 1);
-                map[x, y] = value;
-            }
+    public static void Shuffle<T>(ref T[] array) {
+        Random rng = new();
+        int n = array.Length;
+        while (n > 1) {
+            int k = rng.Next(n--);
+            T temp = array[n];
+            array[n] = array[k];
+            array[k] = temp;
         }
-        return map;
     }
 }
