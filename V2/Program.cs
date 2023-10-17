@@ -1,103 +1,98 @@
 ﻿using Raylib_cs;
-using System;
 
 public class Program {
 	
+	enum SimState {
+		Run,
+		Pause,
+		Next,
+		Reset,
+		Quit,
+		Save
+	}
+
+	static SimState state;
+	static Simulation? sim;
+	static int frame;
+
 	public static void Main() {
-		Raylib.InitWindow(Settings.Width * Settings.Scaling, Settings.Height * Settings.Scaling, "S.P.I.S. - Country Roads since 2023");
+start:
+		Settings.LoadSettings("Settings.toml");
 
-		Map map = new Map();
-		Agent[] agents = new Agent[Settings.AgentAmount];
-		
-		Random rnd = new Random();
+		sim = new Simulation();
+		state = SimState.Run;
+		frame = 0;
 
-		float sum = 0;
-		for (int i = 0; i < Settings.AgentAmount; i++) {
-			float h = (float)(2 * MathF.PI * rnd.NextDouble());
-			agents[i] = new Agent(rnd.Next(Settings.Width), rnd.Next(Settings.Height), h);
-			sum += h * 180 / MathF.PI;
-		}
-
-		int frame = 0;
-
+		Raylib.InitWindow(Settings.Width * Settings.Scaling, Settings.Height * Settings.Scaling, Settings.SplashText);
 		while (!Raylib.WindowShouldClose()) {
-			map.Decay();
+			Input();
 
-			foreach (Agent a in agents) {
-				a.Sense(map);
-				a.Move(ref map);
+			if (state == SimState.Reset) {
+				Raylib.CloseWindow();
+				GC.Collect();
+				goto start;
 			}
 
-			for (int i = agents.Length -1; i >= 0; i--) {
-				switch (agents[i].State) {
-				case AgentAction.Skip:
-					continue;
-
-				case AgentAction.Delete:
-					map.Grid[agents[i].X, agents[i].Y].IsOccupied = false;
-					RemoveAt(ref agents, i);
-					break;
-
-				case AgentAction.Spawn:
-
-					for (int x = agents[i].X -1; x < agents[i].X +1; x++) {
-						for (int y = agents[i].Y -1; y < agents[i].Y +1; y++) {
-							
-							if (map.IsOutOfBounds(x, y)) {
-								continue;
-							}
-
-							if (!map.Grid[x, y].IsOccupied) {
-								float heading = (float)(2 * MathF.PI * rnd.NextDouble());
-								agents = agents.Append(new Agent(x, y, heading)).ToArray();
-								map.Grid[x, y].IsOccupied = true;
-								goto brk;
-							}
-						}
-					}
-					brk:
-					break;
-				}
+			if (state == SimState.Run || state == SimState.Next) {
+				sim.Step();
 			}
-			if (frame % 50 == 0) {
-				Draw(map);
+
+			if (frame % Settings.FrameSkip == 0) {
+				Draw(sim.Scene.Grid);
 			}
 			frame++;
 		}
 	}
 
-	public static void Draw(Map map) {
+	public static void Draw(Data[,] grid) {
 		Raylib.BeginDrawing();
 		Raylib.ClearBackground(Color.BLACK);
 	
 		for (int x = 0; x < Settings.Width; x++) {
 			for (int y = 0; y < Settings.Height; y++) {
 				Color c;
-				//if (map.Grid[x, y].IsOccupied) {
-				//	c = Color.WHITE;
-				//}
-				if (map.Grid[x, y].PheremoneStrength > 0) {
-					c = new Color((int)map.Grid[x, y].PheremoneStrength * 50 % 255, 50, 50, 255);
+
+				if (grid[x, y].PheremoneStrength > 0) {
+					c = new Color((int)grid[x, y].PheremoneStrength * 50 % 255, 50, 50, 255);
 				}
 				else {
 					continue;
+				}
+
+				if (grid[x, y].IsOccupied && Settings.DrawAgents) {
+					c = Color.WHITE;
 				}
 
 				Raylib.DrawRectangle(x * Settings.Scaling, y * Settings.Scaling, Settings.Scaling, Settings.Scaling, c);
 			
 			}
 		}
-
 		Raylib.EndDrawing();
+
+		if (state == SimState.Next) {
+			state = SimState.Pause;
+		}
 
 		return;
 	}
 
-	public static void RemoveAt(ref Agent[] source, int index) {
-		for (int i = index; i < source.Length -1; i++) {
-			source[i] = source[i+1];
+	public static void Input() {
+		if (Raylib.IsKeyPressed(KeyboardKey.KEY_P)) {
+			state = state == SimState.Run ? SimState.Pause : SimState.Run;
 		}
-		Array.Resize(ref source, source.Length -1);
+		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_N)) {
+			state = SimState.Next;
+		}
+		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_R)) {
+			state = SimState.Reset;
+		}
+		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_Q)) {
+			Environment.Exit(0);
+		}
+		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) {
+			Raylib.TakeScreenshot("SPIS" + frame.ToString() + ".png");
+			// TODO: implement real saving of the actuall data not just screenshot
+		}
 		return;
 	}
 }

@@ -1,13 +1,3 @@
-using Raylib_cs;
-using System.Collections.Generic;
-using System.Numerics;
-using System;
-
-public enum AgentAction {
-	Skip,
-	Delete,
-	Spawn
-}
 
 public class Agent {
 	public int X;
@@ -18,7 +8,13 @@ public class Agent {
 	float realX;
 	float realY;
 
-	public AgentAction State;
+	public enum Action {
+		Skip,
+		Delete,
+		Spawn
+	}
+	
+	public Action State;
 	Random rnd;
 
 	public Agent(int xStart, int yStart, float heading) {
@@ -33,14 +29,14 @@ public class Agent {
 
 	}
 
-	public void Sense(Map map) {
+	public void Sense(Scene scene) {
 		float leftAngle = Heading - Settings.AgentSensorAngle;
 		int leftX = (int)(realX + MathF.Cos(leftAngle) * Settings.AgentSensorDistance);
 		int leftY = (int)(realY + MathF.Sin(leftAngle) * Settings.AgentSensorDistance);
 		
 		float left = float.MinValue;
-		if (!map.IsOutOfBounds(leftX, leftY)) {
-			left = map.Grid[leftX, leftY].Evaluate(0);
+		if (!scene.IsOutOfBounds(leftX, leftY)) {
+			left = scene.Grid[leftX, leftY].Evaluate(0);
 		}
 		
 		float rightAngle = Heading + Settings.AgentSensorAngle;
@@ -48,16 +44,16 @@ public class Agent {
 		int rightY = (int)(realY + MathF.Sin(rightAngle) * Settings.AgentSensorDistance);
 		
 		float right = float.MinValue;
-		if (!map.IsOutOfBounds(rightX, rightY)) {
-			right = map.Grid[rightX, rightY].Evaluate(0);
+		if (!scene.IsOutOfBounds(rightX, rightY)) {
+			right = scene.Grid[rightX, rightY].Evaluate(0);
 		}
 
 		int centerX = (int)(realX + MathF.Cos(Heading) * Settings.AgentSensorDistance);
 		int centerY = (int)(realY + MathF.Sin(Heading) * Settings.AgentSensorDistance);
 		
 		float center = float.MinValue;
-		if (!map.IsOutOfBounds(centerX, centerY)) {
-			map.Grid[centerX, centerY].Evaluate(0);
+		if (!scene.IsOutOfBounds(centerX, centerY)) {
+			scene.Grid[centerX, centerY].Evaluate(0);
 		}
 		
 		float max = MathF.Max(MathF.Max(left, right), center);
@@ -81,8 +77,8 @@ public class Agent {
 		return;
 	}
 	
-	public void Move(ref Map map) {
-		State = AgentAction.Skip;
+	public void Move(ref Scene scene) {
+		State = Action.Skip;
 
 		float tmpfX = realX + MathF.Cos(Heading) * Settings.AgentSpeed;
 		float tmpfY = realY + MathF.Sin(Heading) * Settings.AgentSpeed;
@@ -90,29 +86,29 @@ public class Agent {
 		int tmpY = (int)tmpfY;
 
 
-		int nCount = map.GetNeighbourCount(X, Y, 5);
+		int nCount = scene.GetNeighbourCount(X, Y, 5);
 		if (nCount > 15) {
-			State = AgentAction.Delete;
+			State = Action.Delete;
 			return;
 		}
 
-		if (map.IsOutOfBounds(tmpX, tmpY) || map.Grid[tmpX, tmpY].IsOccupied) {
+		if (scene.IsOutOfBounds(tmpX, tmpY) || scene.Grid[tmpX, tmpY].IsOccupied) {
 			Heading = (float)(rnd.NextDouble() * 2 * MathF.PI);
 			return;
 		}
 
-		map.Grid[X, Y].IsOccupied = false;
+		scene.Grid[X, Y].IsOccupied = false;
 		X = tmpX;
 		Y = tmpY;
-		map.Grid[X, Y].IsOccupied = true;
+		scene.Grid[X, Y].IsOccupied = true;
 		realX = tmpfX;
 		realY = tmpfY;
 
-		map.Grid[X, Y].PheremoneStrength += 5;
+		scene.Grid[X, Y].PheremoneStrength += 5;
 
-		nCount = map.GetNeighbourCount(X, Y, 9);
+		nCount = scene.GetNeighbourCount(X, Y, 9);
 		if (nCount <= 4) {
-			State = AgentAction.Spawn;
+			State = Action.Spawn;
 			return;
 		}
 		return;
