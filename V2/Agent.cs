@@ -44,8 +44,8 @@ public class Agent {
 		}
 		
 		float rightAngle = Heading + Settings.AgentSensorAngle;
-		int rightX = (int)(realX + MathF.Cos(leftAngle) * Settings.AgentSensorDistance);
-		int rightY = (int)(realY + MathF.Sin(leftAngle) * Settings.AgentSensorDistance);
+		int rightX = (int)(realX + MathF.Cos(rightAngle) * Settings.AgentSensorDistance);
+		int rightY = (int)(realY + MathF.Sin(rightAngle) * Settings.AgentSensorDistance);
 		
 		float right = float.MinValue;
 		if (!map.IsOutOfBounds(rightX, rightY)) {
@@ -62,8 +62,13 @@ public class Agent {
 		
 		float max = MathF.Max(MathF.Max(left, right), center);
 	
+		float h1 = Heading;
+
 		if (right == left && left == center) {
 			Heading += Settings.AgentSensorAngle * rnd.Next(3) -1;
+		}
+		else if (left == right) {
+			Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
 		}
 		else if (max == left) {
 			Heading -= Settings.AgentSensorAngle;

@@ -5,9 +5,9 @@ static class Settings {
 
 	public static float PheremoneDecayRate = 0.9f;
 
-	public static int AgentAmount = 5000;
+	public static int AgentAmount = 2000;
 	public static float AgentSpeed = 1f;
-	public static float AgentSensorAngle = 1.178097f;
+	public static float AgentSensorAngle = 1.17f;
 	public static float AgentSensorDistance = 5;
 	public static float AgentSensorSize = 1;
 

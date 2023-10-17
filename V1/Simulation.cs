@@ -77,7 +77,7 @@ public class Simulation {
                 else {
                     int r = (int)Math.Round(MathF.Pow(coord.SporeStrength, 1) * 255f);
                     int b = (int)Math.Round(MathF.Pow(coord.PheremoneStrength, 1) * 255f);
-                    color = coord.SporeStrength == 0 ? Color.BLACK : new Color(r, 0, b, 255);
+                    color = coord.SporeStrength == 0 ? Color.BLACK : new Color(r, b, 0, 255);
                 }
 
 

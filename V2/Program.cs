@@ -18,6 +18,8 @@ public class Program {
 			sum += h * 180 / MathF.PI;
 		}
 
+		int frame = 0;
+
 		while (!Raylib.WindowShouldClose()) {
 			map.Decay();
 
@@ -57,8 +59,10 @@ public class Program {
 					break;
 				}
 			}
-
-			Draw(map);
+			if (frame % 50 == 0) {
+				Draw(map);
+			}
+			frame++;
 		}
 	}
 
@@ -69,14 +73,14 @@ public class Program {
 		for (int x = 0; x < Settings.Width; x++) {
 			for (int y = 0; y < Settings.Height; y++) {
 				Color c;
-				if (map.Grid[x, y].IsOccupied) {
-					c = Color.WHITE;
-				}
-				else if (map.Grid[x, y].PheremoneStrength > 0) {
-					c = Color.RED;
+				//if (map.Grid[x, y].IsOccupied) {
+				//	c = Color.WHITE;
+				//}
+				if (map.Grid[x, y].PheremoneStrength > 0) {
+					c = new Color((int)map.Grid[x, y].PheremoneStrength * 50 % 255, 50, 50, 255);
 				}
 				else {
-					c = Color.BLACK;
+					continue;
 				}
 
 				Raylib.DrawRectangle(x * Settings.Scaling, y * Settings.Scaling, Settings.Scaling, Settings.Scaling, c);
