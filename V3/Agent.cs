@@ -1,6 +1,5 @@
 using Raylib_cs;
 using System.Numerics;
-using System.Security.Cryptography;
 
 public class Agent {
     float heading;
@@ -44,11 +43,7 @@ public class Agent {
             dir.Y *= -1;
         }
         
-        Vector2 wantedPos = pos + Settings.AgentSpeed * dir;
-        // Map.DiscoveredMap[(int)wantedPos.X, (int)wantedPos.Y] = true;
-
-        // Map.OccupiedMap[(int)pos.X, (int)pos.Y] = false;
-        // Map.OccupiedMap[(int)wantedPos.X, (int)wantedPos.Y] = true;
+        Vector2 wantedPos = pos + dir;
         
         pos = wantedPos;
     }
