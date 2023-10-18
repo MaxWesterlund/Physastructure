@@ -9,7 +9,7 @@ DrawAgents = true
 SplashText = "S.P.I.S. - Country Roads since 2023"
 
 [parameters]
-PheremoneDecayRate = 0.9
+PheremoneDecayRate = 0.99
 
 AgentCount = 500
 AgentSpeed = 1.0

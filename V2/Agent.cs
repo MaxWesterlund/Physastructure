@@ -17,7 +17,7 @@ public class Agent {
 	public Action State;
 	Random rnd;
 
-	public Agent(int xStart, int yStart, float heading) {
+	public Agent(int xStart, int yStart) {
 		X = xStart;
 		Y = yStart;
 		
@@ -26,38 +26,57 @@ public class Agent {
 
 		rnd = new Random(xStart * yStart);
 		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
-
 	}
 
 	public void Sense(Scene scene) {
-		float[] sensors = new float[3];
-		for (int i = 0; i < sensors.Length; i++) {
+		// float[] sensors = new float[3];
+		int sensor = 0;
+		float maxVal = 0;
+		for (int i = 0; i < 3; i++) {
 			float a = Heading + (i - 1) * Settings.AgentSensorAngle;
 			int x = (int)(realX + MathF.Cos(a) * Settings.AgentSensorDistance);
 			int y = (int)(realY + MathF.Sin(a) * Settings.AgentSensorDistance);
-			if (!scene.IsOutOfBounds(x, y)) {
-				sensors[i] = scene.Grid[X, y].Evaluate(0);
+			// if (!scene.IsOutOfBounds(x, y)) {
+			// 	sensors[i] = scene.Grid[X, y].Evaluate(0);
+			// }
+			// else {
+			// 	sensors[i] = float.MinValue;
+			// }
+			float val = scene.IsOutOfBounds(x, y) ?  0 : scene.Grid[X, y].Evaluate(0);
+			if (i == 0) {
+				maxVal = val;
+				continue;
 			}
-			else {
-				sensors[i] = float.MinValue;
+			if (val > maxVal || (val == maxVal && (float)rnd.NextDouble() > .5f)) {
+				maxVal = val;
+				sensor = i;
 			}
+		}
+
+		switch (sensor) {
+			case 0:
+				Heading -= Settings.AgentSensorAngle;
+				break;
+			case 2:
+				Heading -= Settings.AgentSensorAngle;
+				break;
 		}
 		
-		float max = MathF.Max(MathF.Max(sensors[0], sensors[2]), sensors[1]);
+		// float max = MathF.Max(MathF.Max(sensors[0], sensors[2]), sensors[1]);
 
-		if (sensors[2] == sensors[0] && sensors[0] == sensors[1]) {
-			Heading += Settings.AgentSensorAngle * rnd.Next(3) -1;
-		}
-		else if (sensors[0] == sensors[2]) {
-			Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
-		}
-		else if (max == sensors[0]) {
-			Heading -= Settings.AgentSensorAngle;
-		}
-		else if (max == sensors[2]) {
-			Heading += Settings.AgentSensorAngle;
+		// if (sensors[2] == sensors[0] && sensors[0] == sensors[1]) {
+		// 	Heading += Settings.AgentSensorAngle * rnd.Next(3) -1;
+		// }
+		// else if (sensors[0] == sensors[2]) {
+		// 	Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
+		// }
+		// else if (max == sensors[0]) {
+		// 	Heading -= Settings.AgentSensorAngle;
+		// }
+		// else if (max == sensors[2]) {
+		// 	Heading += Settings.AgentSensorAngle;
 
-		}
+		// }
 
 		return;
 	}
