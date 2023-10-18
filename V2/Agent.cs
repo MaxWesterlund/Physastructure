@@ -89,7 +89,7 @@ public class Agent {
 		realX = tmpfX;
 		realY = tmpfY;
 
-		scene.Grid[X, Y].PheremoneStrength += 5;
+		scene.Grid[X, Y].PheremoneStrength = 1;
 
 		nCount = scene.GetNeighbourCount(X, Y, 9);
 		if (nCount <= 4) {

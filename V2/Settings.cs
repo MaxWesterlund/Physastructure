@@ -2,9 +2,12 @@ using Tomlyn;
 using Tomlyn.Model;
 
 static class Settings {
-	public static int Width;
-	public static int Height;
-	public static int Scaling;
+	public static int WindowSize;
+	public static int Size;
+	public static int Resolution;
+	public static int PixelAmount;
+	public static int Ratio;
+	public static int PixelScaler;
 	public static int FrameSkip;
 	public static bool DrawAgents;
 	public static string? SplashText;
@@ -28,14 +31,19 @@ static class Settings {
 		
 		TomlTable screenTable = (TomlTable)tomlTable["window"];
 		
-		Width = (int)(long)screenTable["Width"];
-		Height = (int)(long)screenTable["Height"];
+		WindowSize = (int)(long)screenTable["WindowSize"];
+		Size = (int)(long)screenTable["Size"];
+		Resolution = (int)(long)screenTable["Resolution"];
+		PixelAmount = Size / Resolution;
+		Ratio = WindowSize / Size;
+		PixelScaler = Resolution * Ratio;
 
-		Scaling = (int)(long)screenTable["Scaling"];
 		FrameSkip = (int)(long)screenTable["FrameSkip"];
 
 		DrawAgents = (bool)screenTable["DrawAgents"];
 		SplashText = (string)screenTable["SplashText"];
+
+
 
 		// ------------------ sim params ------------------ \\
 
