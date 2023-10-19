@@ -1,7 +1,7 @@
 [window]
 WindowSize = 800
 Size = 400
-Resolution = 4
+Resolution = 2
 
 FrameSkip = 1
 DrawAgents = true
@@ -14,7 +14,7 @@ PheremoneDecayRate = 0.99
 AgentCount = 500
 AgentSpeed = 1.0
 AgentSensorAngle = 1.17
-AgentSensorDistance = 5.0
+AgentSensorDistance = 10.0
 AgentSensorSize = 1.0
 
 PheremoneWeight = 1.0

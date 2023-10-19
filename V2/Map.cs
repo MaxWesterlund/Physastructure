@@ -4,12 +4,14 @@ public class Data {
 	public float PheremoneStrength;
 
 	public bool IsOccupied;
+	public bool IsDiscovered;
 
 	public Data() {
 		Height = 0;
 		PheremoneStrength = 0;
 
 		IsOccupied = false;
+		IsDiscovered = false;
 
 		return;
 	}
@@ -28,5 +30,3 @@ public class Data {
 		return value;
 	}
 }
-
-
