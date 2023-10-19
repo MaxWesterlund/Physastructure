@@ -6,8 +6,12 @@ public class Simulation {
 	Random rnd = new Random();
 
 	public Simulation() {
+
+		float sum = 0;
 		for (int i = 0; i < Settings.AgentCount; i++) {
-			Agents[i] = new Agent(Settings.Size / 2, Settings.Size / 2);
+			float h = (float)(2 * MathF.PI * rnd.NextDouble());
+			Agents[i] = new Agent(rnd.Next(Settings.Size), rnd.Next(Settings.Size), h);
+			sum += h * 180 / MathF.PI;
 		}
 	}
 
@@ -39,7 +43,8 @@ public class Simulation {
 						}
 
 						if (!Scene.Grid[x, y].IsOccupied) {
-							Agents = Agents.Append(new Agent(x, y)).ToArray();
+							float heading = (float)(2 * MathF.PI * rnd.NextDouble());
+							Agents = Agents.Append(new Agent(x, y, heading)).ToArray();
 							Scene.Grid[x, y].IsOccupied = true;
 							goto brk;
 						}

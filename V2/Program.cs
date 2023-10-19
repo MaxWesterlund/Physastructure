@@ -60,7 +60,7 @@ start:
                 avg /= Settings.Resolution * Settings.Resolution;
                 int r = (int)(avg * 255);
 
-                Color color = new Color(r, r, 0, 255);
+                Color color = new Color(r, 0, 0, 255);
 
                 Raylib.DrawRectangle(x * Settings.PixelScaler, y * Settings.PixelScaler, Settings.PixelScaler, Settings.PixelScaler, color);
             }
