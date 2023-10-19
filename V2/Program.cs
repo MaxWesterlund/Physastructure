@@ -23,9 +23,10 @@ start:
 		state = SimState.Run;
 		frame = 0;
 
-		Raylib.InitWindow(Settings.WindowSize, Settings.WindowSize, Settings.SplashText);
+		Raylib.InitWindow(Settings.Width * Settings.Scaling, Settings.Height * Settings.Scaling, Settings.SplashText);
 		while (!Raylib.WindowShouldClose()) {
 			Input();
+
 			if (state == SimState.Reset) {
 				Raylib.CloseWindow();
 				GC.Collect();
@@ -37,38 +38,35 @@ start:
 			}
 
 			if (frame % Settings.FrameSkip == 0) {
-				Draw(sim.Scene.Grid, sim.Agents);
+				Draw(sim.Scene.Grid);
 			}
 			frame++;
 		}
 	}
 
-	public static void Draw(Data[,] grid, Agent[] agents) {
+	public static void Draw(Data[,] grid) {
 		Raylib.BeginDrawing();
 		Raylib.ClearBackground(Color.BLACK);
 	
-		for (int y = 0; y < Settings.PixelAmount; y++) {
-            for (int x = 0; x < Settings.PixelAmount; x++) {
-                float avg = 0;
-                for (int y2 = 0; y2 < Settings.Resolution; y2++) {
-                    for (int x2 = 0; x2 < Settings.Resolution; x2++) {
-                        int xCoord = x * Settings.Resolution + x2;
-                        int yCoord = y * Settings.Resolution + y2;
-                        avg += grid[xCoord, yCoord].PheremoneStrength;
-                    }
-                }
-                avg /= Settings.Resolution * Settings.Resolution;
-                int r = (int)(avg * 255);
+		for (int x = 0; x < Settings.Width; x++) {
+			for (int y = 0; y < Settings.Height; y++) {
+				Color c;
 
-                Color color = new Color(r, 0, 0, 255);
+				if (grid[x, y].PheremoneStrength > 0) {
+					c = new Color((int)grid[x, y].PheremoneStrength * 50 % 255, 50, 50, 255);
+				}
+				else {
+					continue;
+				}
 
-                Raylib.DrawRectangle(x * Settings.PixelScaler, y * Settings.PixelScaler, Settings.PixelScaler, Settings.PixelScaler, color);
-            }
-        }
+				if (grid[x, y].IsOccupied && Settings.DrawAgents) {
+					c = Color.WHITE;
+				}
 
-		Raylib.DrawText("FPS: " + Raylib.GetFPS().ToString(), 10, 10, 20, Color.WHITE);
-		Raylib.DrawText("Agents: " + agents.Length, 10, 30, 20, Color.WHITE);
-
+				Raylib.DrawRectangle(x * Settings.Scaling, y * Settings.Scaling, Settings.Scaling, Settings.Scaling, c);
+			
+			}
+		}
 		Raylib.EndDrawing();
 
 		if (state == SimState.Next) {

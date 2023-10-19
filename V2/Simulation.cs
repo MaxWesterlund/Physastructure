@@ -10,7 +10,7 @@ public class Simulation {
 		float sum = 0;
 		for (int i = 0; i < Settings.AgentCount; i++) {
 			float h = (float)(2 * MathF.PI * rnd.NextDouble());
-			Agents[i] = new Agent(rnd.Next(Settings.Size), rnd.Next(Settings.Size), h);
+			Agents[i] = new Agent(rnd.Next(Settings.Width), rnd.Next(Settings.Height), h);
 			sum += h * 180 / MathF.PI;
 		}
 	}
