@@ -30,31 +30,46 @@ public class Agent {
 	}
 
 	public void Sense(Scene scene) {
-		float[] sensors = new float[3];
-		for (int i = 0; i < sensors.Length; i++) {
-			float a = Heading + (i - 1) * Settings.AgentSensorAngle;
-			int x = (int)(realX + MathF.Cos(a) * Settings.AgentSensorDistance);
-			int y = (int)(realY + MathF.Sin(a) * Settings.AgentSensorDistance);
-			if (!scene.IsOutOfBounds(x, y)) {
-				sensors[i] = scene.Grid[X, y].Evaluate(0);
-			}
-			else {
-				sensors[i] = float.MinValue;
-			}
+		float leftAngle = Heading - Settings.AgentSensorAngle;
+		int leftX = (int)(realX + MathF.Cos(leftAngle) * Settings.AgentSensorDistance);
+		int leftY = (int)(realY + MathF.Sin(leftAngle) * Settings.AgentSensorDistance);
+		
+		float left = float.MinValue;
+		if (!scene.IsOutOfBounds(leftX, leftY)) {
+			left = scene.Grid[leftX, leftY].Evaluate(0);
 		}
 		
-		float max = MathF.Max(MathF.Max(sensors[0], sensors[2]), sensors[1]);
+		float rightAngle = Heading + Settings.AgentSensorAngle;
+		int rightX = (int)(realX + MathF.Cos(rightAngle) * Settings.AgentSensorDistance);
+		int rightY = (int)(realY + MathF.Sin(rightAngle) * Settings.AgentSensorDistance);
+		
+		float right = float.MinValue;
+		if (!scene.IsOutOfBounds(rightX, rightY)) {
+			right = scene.Grid[rightX, rightY].Evaluate(0);
+		}
 
-		if (sensors[2] == sensors[0] && sensors[0] == sensors[1]) {
+		int centerX = (int)(realX + MathF.Cos(Heading) * Settings.AgentSensorDistance);
+		int centerY = (int)(realY + MathF.Sin(Heading) * Settings.AgentSensorDistance);
+		
+		float center = float.MinValue;
+		if (!scene.IsOutOfBounds(centerX, centerY)) {
+			scene.Grid[centerX, centerY].Evaluate(0);
+		}
+		
+		float max = MathF.Max(MathF.Max(left, right), center);
+	
+		float h1 = Heading;
+
+		if (right == left && left == center) {
 			Heading += Settings.AgentSensorAngle * rnd.Next(3) -1;
 		}
-		else if (sensors[0] == sensors[2]) {
+		else if (left == right) {
 			Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
 		}
-		else if (max == sensors[0]) {
+		else if (max == left) {
 			Heading -= Settings.AgentSensorAngle;
 		}
-		else if (max == sensors[2]) {
+		else if (max == right) {
 			Heading += Settings.AgentSensorAngle;
 
 		}

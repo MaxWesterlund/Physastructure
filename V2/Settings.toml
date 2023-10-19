@@ -11,7 +11,7 @@ SplashText = "S.P.I.S. - Country Roads since 2023"
 [parameters]
 PheremoneDecayRate = 0.9
 
-AgentCount = 500
+AgentCount = 2000
 AgentSpeed = 1.0
 AgentSensorAngle = 1.17
 AgentSensorDistance = 5.0

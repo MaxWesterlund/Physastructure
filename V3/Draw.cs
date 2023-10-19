@@ -17,7 +17,7 @@ public static class Draw {
 
                 Color color = new Color(r, 0, 0, 255);
 
-                Raylib.DrawRectangle(x * Settings.PxlPosScaling, y * Settings.PxlPosScaling, Settings.Ratio * 2, Settings.Ratio * 2, color);
+                Raylib.DrawRectangle(x * Settings.PxlPosScaling, y * Settings.PxlPosScaling, Settings.Ratio * Settings.Res, Settings.Ratio * Settings.Res, color);
             }
         }
     }
