@@ -1,36 +1,35 @@
 public class Simulation {
-
 	public Scene Scene = new Scene();
-	public Agent[] Agents = new Agent[Settings.AgentCount];
+	public List<Agent> Agents = new List<Agent>();
 
-	Random rnd = new Random();
+	Random rng = new Random();
 
 	public Simulation() {
 		for (int i = 0; i < Settings.AgentCount; i++) {
-			Agents[i] = new Agent(Settings.Size / 2, Settings.Size / 2);
+			Agents.Add(new Agent(Settings.Size / 2, Settings.Size / 2));
 		}
 	}
 
 	public void Step() {
 		Scene.Decay();
 
+		// ShuffleAgents(ref Agents);
 		foreach (Agent a in Agents) {
 			a.Sense(Scene);
 			a.Move(ref Scene);
 		}
 
-		for (int i = Agents.Length -1; i >= 0; i--) {
+		for (int i = 0; i < Agents.Count; i++) {
 			switch (Agents[i].State) {
 			case Agent.Action.Skip:
 				continue;
 
 			case Agent.Action.Delete:
 				Scene.Grid[Agents[i].X, Agents[i].Y].IsOccupied = false;
-				RemoveAgent(ref Agents, i);
+				Agents.Remove(Agents[i]);
 				break;
 
 			case Agent.Action.Spawn:
-				// Suffle before spawning, should solve propblem
 				for (int x = Agents[i].X -1; x < Agents[i].X +1; x++) {
 					for (int y = Agents[i].Y -1; y < Agents[i].Y +1; y++) {
 
@@ -39,7 +38,7 @@ public class Simulation {
 						}
 
 						if (!Scene.Grid[x, y].IsOccupied) {
-							Agents = Agents.Append(new Agent(x, y)).ToArray();
+							Agents.Add(new Agent(x, y));
 							Scene.Grid[x, y].IsOccupied = true;
 							goto brk;
 						}
@@ -52,13 +51,14 @@ brk:
 		return;
 	}
 
-	public void RemoveAgent(ref Agent[] source, int index) {
-		for (int i = index; i < source.Length -1; i++) {
-			source[i] = source[i+1];
-		}
-		Array.Resize(ref source, source.Length -1);
-		return;
+	void ShuffleAgents(ref List<Agent> list) {  
+		int n = list.Count;  
+		while (n > 1) {  
+			n--;  
+			int k = rng.Next(n + 1);  
+			Agent value = list[k];  
+			list[k] = list[n];  
+			list[n] = value;  
+    	}  
 	}
-
 }
-

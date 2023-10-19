@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using System.Numerics;
+using Raylib_cs;
 
 public class Program {
 	
@@ -43,7 +44,7 @@ start:
 		}
 	}
 
-	public static void Draw(Data[,] grid, Agent[] agents) {
+	public static void Draw(Data[,] grid, List<Agent> agents) {
 		Raylib.BeginDrawing();
 		Raylib.ClearBackground(Color.BLACK);
 	
@@ -66,14 +67,18 @@ start:
             }
         }
 
+		// if (Settings.DrawAgents) {
+		// 	Raylib.DrawCircle(agents[0].X * Settings.PixelScaler, agents[0].Y * Settings.PixelScaler, 5, Color.WHITE);
+		// }
+
 		Raylib.DrawText("FPS: " + Raylib.GetFPS().ToString(), 10, 10, 20, Color.WHITE);
-		Raylib.DrawText("Agents: " + agents.Length, 10, 30, 20, Color.WHITE);
-		float avgHeading = 0;
-		foreach (Agent agent in agents) {
-			avgHeading += agent.Heading;
-		}
-		avgHeading /= agents.Length;
-		Raylib.DrawText("Avg Heading: " + avgHeading.ToString(), 10, 50, 20, Color.WHITE);
+		Raylib.DrawText("Agents: " + agents.Count, 10, 30, 20, Color.WHITE);
+		// float avgHeading = 0;
+		// foreach (Agent agent in agents) {
+		// 	avgHeading += agent.Heading;
+		// }
+		// avgHeading /= agents.Length;
+		// Raylib.DrawText("Avg Heading: " + avgHeading.ToString(), 10, 50, 20, Color.WHITE);
 
 		Raylib.EndDrawing();
 
@@ -99,7 +104,7 @@ start:
 		}
 		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) {
 			Raylib.TakeScreenshot("SPIS" + frame.ToString() + ".png");
-			// TODO: implement real saving of the actuall data not just screenshot
+			// TODO: implement real saving of the actual data not just screenshot
 		}
 		return;
 	}

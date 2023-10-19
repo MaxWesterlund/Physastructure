@@ -1,6 +1,6 @@
-public class Agent {
-	// Tenderar att svänga uppåt, undviker kanter på fel sätt.
+using System.Numerics;
 
+public class Agent {
 	public int X;
 	public int Y;
 	public float Heading;
@@ -35,8 +35,8 @@ public class Agent {
 		float maxVal = 0;
 		for (int i = 0; i < 3; i++) {
 			float a = Heading + (i - 1) * Settings.AgentSensorAngle;
-			int x = (int)(realX + MathF.Cos(a) * Settings.AgentSensorDistance);
-			int y = (int)(realY + MathF.Sin(a) * Settings.AgentSensorDistance);
+			int x = (int)MathF.Round((realX + MathF.Cos(a) * Settings.AgentSensorDistance));
+			int y = (int)MathF.Round((realY + MathF.Sin(a) * Settings.AgentSensorDistance));
 			// if (!scene.IsOutOfBounds(x, y)) {
 			// 	sensors[i] = scene.Grid[X, y].Evaluate(0);
 			// }
@@ -59,22 +59,22 @@ public class Agent {
 		}
 
 		switch (sensor) {
-			case 2:
+			case 2: // Left
 				Heading -= Settings.AgentSensorAngle;
 				break;
-			case 4:
+			case 4: // Right
 				Heading += Settings.AgentSensorAngle;
 				break;
-			case 5:
+			case 5: // Left & Middle
 				Heading -= rnd.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
 				break;
-			case 6:
+			case 6: // Left & Right
 				Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
 				break;
-			case 7:
+			case 7: // Middle & Right
 				Heading += rnd.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
 				break;
-			case 8:
+			case 8: // Left & Middle & Right
 				Heading += Settings.AgentSensorAngle * (rnd.Next(3) -1);
 				break;
 		}
@@ -102,9 +102,8 @@ public class Agent {
 
 		float tmpfX = realX + MathF.Cos(Heading) * Settings.AgentSpeed;
 		float tmpfY = realY + MathF.Sin(Heading) * Settings.AgentSpeed;
-		int tmpX = (int)tmpfX;
-		int tmpY = (int)tmpfY;
-
+		int tmpX = (int)MathF.Round(tmpfX);
+		int tmpY = (int)MathF.Round(tmpfY);
 
 		int nCount = scene.GetNeighbourCount(X, Y, 5);
 		if (nCount > 15) {
