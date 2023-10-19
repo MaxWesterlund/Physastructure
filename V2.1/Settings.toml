@@ -1,0 +1,21 @@
+[window]
+WindowSize = 800
+Size = 400
+Resolution = 2
+
+FrameSkip = 1
+DrawAgents = true
+
+SplashText = "S.P.I.S. - Country Roads since 2023"
+
+[parameters]
+PheremoneDecayRate = 0.99
+
+AgentCount = 500
+AgentSpeed = 1.0
+AgentSensorAngle = 1.17
+AgentSensorDistance = 10.0
+AgentSensorSize = 1.0
+
+PheremoneWeight = 1.0
+HeightWeight = 0.5
