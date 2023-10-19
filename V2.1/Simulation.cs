@@ -30,7 +30,7 @@ public class Simulation {
 				break;
 
 			case Agent.Action.Spawn:
-
+				// Suffle before spawning, should solve propblem
 				for (int x = Agents[i].X -1; x < Agents[i].X +1; x++) {
 					for (int y = Agents[i].Y -1; y < Agents[i].Y +1; y++) {
 
@@ -39,7 +39,7 @@ public class Simulation {
 						}
 
 						if (!Scene.Grid[x, y].IsOccupied) {
-							Agents = Agents.Append(new Agent(rnd.Next(Settings.Size), rnd.Next(Settings.Size))).ToArray();
+							Agents = Agents.Append(new Agent(x, y)).ToArray();
 							Scene.Grid[x, y].IsOccupied = true;
 							goto brk;
 						}

@@ -25,7 +25,7 @@ public class Agent {
 		realX = X;
 		realY = Y;
 
-		rnd = new Random(xStart * yStart);
+		rnd = new Random();
 		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
 	}
 

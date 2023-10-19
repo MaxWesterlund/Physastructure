@@ -14,7 +14,7 @@ PheremoneDecayRate = 0.99
 AgentCount = 500
 AgentSpeed = 1.0
 AgentSensorAngle = 1.17
-AgentSensorDistance = 10.0
+AgentSensorDistance = 5.0
 AgentSensorSize = 1.0
 
 PheremoneWeight = 1.0

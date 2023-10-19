@@ -60,7 +60,7 @@ start:
                 avg /= Settings.Resolution * Settings.Resolution;
                 int r = (int)(avg * 255);
 
-                Color color = new Color(r, r, 0, 255);
+                Color color = new Color(0, 0, r, 255);
 
                 Raylib.DrawRectangle(x * Settings.PixelScaler, y * Settings.PixelScaler, Settings.PixelScaler, Settings.PixelScaler, color);
             }
@@ -68,6 +68,12 @@ start:
 
 		Raylib.DrawText("FPS: " + Raylib.GetFPS().ToString(), 10, 10, 20, Color.WHITE);
 		Raylib.DrawText("Agents: " + agents.Length, 10, 30, 20, Color.WHITE);
+		float avgHeading = 0;
+		foreach (Agent agent in agents) {
+			avgHeading += agent.Heading;
+		}
+		avgHeading /= agents.Length;
+		Raylib.DrawText("Avg Heading: " + avgHeading.ToString(), 10, 50, 20, Color.WHITE);
 
 		Raylib.EndDrawing();
 
