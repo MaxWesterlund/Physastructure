@@ -39,7 +39,7 @@ public class Simulation {
 						}
 
 						if (!Scene.Grid[x, y].IsOccupied) {
-							Agents = Agents.Append(new Agent(rnd.Next(Settings.Size), rnd.Next(Settings.Size))).ToArray();
+							Agents = Agents.Append(new Agent(x, y)).ToArray();
 							Scene.Grid[x, y].IsOccupied = true;
 							goto brk;
 						}
