@@ -4,16 +4,12 @@ public class Data {
 	public float PheremoneStrength;
 
 	public bool IsOccupied;
-	public bool IsDiscovered;
 
 	public Data() {
 		Height = 0;
 		PheremoneStrength = 0;
 
 		IsOccupied = false;
-		IsDiscovered = false;
-
-		return;
 	}
 
 	public void Decay() {
@@ -21,7 +17,6 @@ public class Data {
 		if (PheremoneStrength < 0.001) {
 			PheremoneStrength = 0f;
 		}
-		return;
 	}
 
 	public float Evaluate(int height) {

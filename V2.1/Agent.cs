@@ -16,7 +16,7 @@ public class Agent {
 	}
 	
 	public Action State;
-	Random rnd;
+	Random rng;
 
 	public Agent(int xStart, int yStart) {
 		X = xStart;
@@ -25,8 +25,8 @@ public class Agent {
 		realX = X;
 		realY = Y;
 
-		rnd = new Random();
-		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
+		rng = new Random();
+		Heading = (float)rng.NextDouble() * 2 * MathF.PI;
 	}
 
 	public void Sense(Scene scene) {
@@ -35,8 +35,8 @@ public class Agent {
 		float maxVal = 0;
 		for (int i = 0; i < 3; i++) {
 			float a = Heading + (i - 1) * Settings.AgentSensorAngle;
-			int x = (int)MathF.Round((realX + MathF.Cos(a) * Settings.AgentSensorDistance));
-			int y = (int)MathF.Round((realY + MathF.Sin(a) * Settings.AgentSensorDistance));
+			int x = (int)MathF.Round(realX + MathF.Cos(a) * Settings.AgentSensorDistance);
+			int y = (int)MathF.Round(realY + MathF.Sin(a) * Settings.AgentSensorDistance);
 			// if (!scene.IsOutOfBounds(x, y)) {
 			// 	sensors[i] = scene.Grid[X, y].Evaluate(0);
 			// }
@@ -66,26 +66,26 @@ public class Agent {
 				Heading += Settings.AgentSensorAngle;
 				break;
 			case 5: // Left & Middle
-				Heading -= rnd.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
+				Heading -= rng.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
 				break;
 			case 6: // Left & Right
-				Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
+				Heading += rng.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
 				break;
 			case 7: // Middle & Right
-				Heading += rnd.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
+				Heading += rng.Next(2) == 1 ? 0 : Settings.AgentSensorAngle;
 				break;
 			case 8: // Left & Middle & Right
-				Heading += Settings.AgentSensorAngle * (rnd.Next(3) -1);
+				Heading += Settings.AgentSensorAngle * (rng.Next(3) -1);
 				break;
 		}
 		
 		// float max = MathF.Max(MathF.Max(sensors[0], sensors[2]), sensors[1]);
 
 		// if (sensors[2] == sensors[0] && sensors[0] == sensors[1]) {
-		// 	Heading += Settings.AgentSensorAngle * (rnd.Next(3) -1);
+		// 	Heading += Settings.AgentSensorAngle * (rng.Next(3) -1);
 		// }
 		// else if (sensors[0] == sensors[2]) {
-		// 	Heading += rnd.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
+		// 	Heading += rng.Next(2) == 1 ? Settings.AgentSensorAngle : -Settings.AgentSensorAngle;
 		// }
 		// else if (max == sensors[0]) {
 		// 	Heading -= Settings.AgentSensorAngle;
@@ -94,7 +94,7 @@ public class Agent {
 		// 	Heading += Settings.AgentSensorAngle;
 		// }
 
-		return;
+		// return;
 	}
 	
 	public void Move(ref Scene scene) {
@@ -105,14 +105,14 @@ public class Agent {
 		int tmpX = (int)MathF.Round(tmpfX);
 		int tmpY = (int)MathF.Round(tmpfY);
 
-		int nCount = scene.GetNeighbourCount(X, Y, 5);
-		if (nCount > 15) {
+		int n = scene.GetNeighbourCount(X, Y, 5);
+		if (n > 15) {
 			State = Action.Delete;
 			return;
 		}
 
 		if (scene.IsOutOfBounds(tmpX, tmpY) || scene.Grid[tmpX, tmpY].IsOccupied) {
-			Heading = (float)(rnd.NextDouble() * 2 * MathF.PI);
+			Heading = (float)(rng.NextDouble() * 2 * MathF.PI);
 			return;
 		}
 
@@ -120,17 +120,15 @@ public class Agent {
 		X = tmpX;
 		Y = tmpY;
 		scene.Grid[X, Y].IsOccupied = true;
-		scene.Grid[X, Y].IsDiscovered = true;
 		realX = tmpfX;
 		realY = tmpfY;
 
 		scene.Grid[X, Y].PheremoneStrength = 1;
 
-		nCount = scene.GetNeighbourCount(X, Y, 9);
-		if (nCount <= 4) {
+		n = scene.GetNeighbourCount(X, Y, 9);
+		if (n <= 4) {
 			State = Action.Spawn;
 			return;
 		}
-		return;
 	}
 }

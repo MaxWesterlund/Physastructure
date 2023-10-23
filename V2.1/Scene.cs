@@ -12,8 +12,8 @@ public class Scene {
 	}
 
 	public void Decay() {
-		for (int x = 0; x < Settings.Size; x++) {
-			for (int y = 0; y < Settings.Size; y++) {
+		for (int y = 0; y < Settings.Size; y++) {
+			for (int x = 0; x < Settings.Size; x++) {
 				Grid[x, y].Decay();
 			}
 		}
@@ -23,8 +23,8 @@ public class Scene {
 		int half = kernel / 2;
 		int count = 0;
 
-		for (int x = xPos - half; x <= xPos + half; x++) {
-			for (int y = yPos- half; y <= yPos + half; y++) {
+		for (int y = yPos - half; y <= yPos + half; y++) {
+			for (int x = xPos- half; x <= xPos + half; x++) {
 
 				if (IsOutOfBounds(x, y)) {
 					continue;

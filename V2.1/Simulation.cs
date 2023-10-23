@@ -13,7 +13,7 @@ public class Simulation {
 	public void Step() {
 		Scene.Decay();
 
-		// ShuffleAgents(ref Agents);
+		Shuffle(ref Agents);
 		foreach (Agent a in Agents) {
 			a.Sense(Scene);
 			a.Move(ref Scene);
@@ -48,15 +48,14 @@ brk:
 				break;
 			}
 		}
-		return;
 	}
 
-	void ShuffleAgents(ref List<Agent> list) {  
+	void Shuffle<T>(ref List<T> list) {  
 		int n = list.Count;  
 		while (n > 1) {  
 			n--;  
 			int k = rng.Next(n + 1);  
-			Agent value = list[k];  
+			T value = list[k];  
 			list[k] = list[n];  
 			list[n] = value;  
     	}  

@@ -1,7 +1,7 @@
 [window]
 WindowSize = 800
 Size = 400
-Resolution = 2
+Resolution = 1
 
 FrameSkip = 1
 DrawAgents = true
@@ -11,7 +11,7 @@ SplashText = "S.P.I.S. - Country Roads since 2023"
 [parameters]
 PheremoneDecayRate = 0.93
 
-AgentCount = 500
+AgentCount = 10
 AgentSpeed = 1.0
 AgentSensorAngle = 1.4
 AgentSensorDistance = 5.0
