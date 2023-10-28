@@ -3,10 +3,12 @@ public class Agent {
 	public int X;
 	public int Y;
 	public float Heading;
-	public float PheremoneStrength;
+	public float SporeStrength;
 
-	float realX;
-	float realY;
+	float townMemory;
+
+	float IEEEX;
+	float IEEEY;
 
 	public enum Action {
 		Skip,
@@ -21,11 +23,13 @@ public class Agent {
 		X = xStart;
 		Y = yStart;
 		
-		realX = X;
-		realY = Y;
+		IEEEX = X;
+		IEEEY = Y;
 
 		rnd = rrnd;
 		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
+
+		townMemory = 0f;
 
 	}
 
@@ -41,9 +45,9 @@ public class Agent {
 		for (int i = 0; i < 3; i++) {
 			sensors[i].ID = i;
 
-			float angle = Heading + (i - 1) * Settings.AgentSensorAngle;
-			int x = (int)(realX + MathF.Cos(angle) * Settings.AgentSensorDistance);
-			int y = (int)(realY + MathF.Sin(angle) * Settings.AgentSensorDistance);
+			float angle = Heading + (i - 1) * Settings.SensorAngle;
+			int x = (int)(IEEEX + MathF.Cos(angle) * Settings.SensorDistance);
+			int y = (int)(IEEEY + MathF.Sin(angle) * Settings.SensorDistance);
 
 			if (scene.IsOutOfBounds(x, y)) {
 				sensors[i].Value = float.MinValue;
@@ -56,26 +60,27 @@ public class Agent {
 	
 		if (sensors[0].Value == float.MinValue) {
 			// random dir
-			Heading += (rnd.Next(3) - 1) * Settings.AgentSensorAngle;
+			Heading += (rnd.Next(3) - 1) * Settings.SensorAngle;
 		}
 		else if (sensors[0].Value == sensors[1].Value) {
 			// chose random of top 2
-			Heading += (sensors[rnd.Next(1)].ID - 1) * Settings.AgentSensorAngle;
+			Heading += (sensors[rnd.Next(1)].ID - 1) * Settings.SensorAngle;
 		}
 		else {
-			Heading += (sensors[0].ID - 1) * Settings.AgentSensorAngle;
+			Heading += (sensors[0].ID - 1) * Settings.SensorAngle;
 		}
 
 		return;
 	}
 	
 	public void Move(ref Scene scene) {
+
 		State = Action.Skip;
 
-		float tmpfX = realX + MathF.Cos(Heading) * Settings.AgentSpeed;
-		float tmpfY = realY + MathF.Sin(Heading) * Settings.AgentSpeed;
-		int tmpX = (int)Math.Round(tmpfX, 1);
-		int tmpY = (int)Math.Round(tmpfY, 1);
+		float tmpIEEEX = IEEEX + MathF.Cos(Heading) * Settings.AgentSpeed;
+		float tmpIEEEY = IEEEY + MathF.Sin(Heading) * Settings.AgentSpeed;
+		int tmpX = (int)Math.Round(tmpIEEEX, 1);
+		int tmpY = (int)Math.Round(tmpIEEEY, 1);
 
 
 		int nCount = scene.GetNeighbourCount(X, Y, 5);
@@ -93,10 +98,10 @@ public class Agent {
 		X = tmpX;
 		Y = tmpY;
 		scene.Grid[X, Y].IsOccupied = true;
-		realX = tmpfX;
-		realY = tmpfY;
+		IEEEX = tmpIEEEX;
+		IEEEY = tmpIEEEY;
 
-		scene.Grid[X, Y].PheremoneStrength += 5;
+		scene.Grid[X, Y].SporeStrength += 5;
 
 		nCount = scene.GetNeighbourCount(X, Y, 9);
 		if (nCount <= 4) {

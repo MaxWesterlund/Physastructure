@@ -38,17 +38,16 @@ public class Simulation {
 				while (tries < 18) {
 					int x = Agents[i].X + (rnd.Next(3) -1);
 					int y = Agents[i].Y + (rnd.Next(3) -1);
-					if (Scene.IsOutOfBounds(x, y)) {
+					
+					if (Scene.IsOutOfBounds(x, y) || Scene.Grid[x, y].IsOccupied) {
+						tries++;
 						continue;
 					}
 
-					if (!Scene.Grid[x, y].IsOccupied) {
-						float heading = (float)(2 * MathF.PI * rnd.NextDouble());
-						Agents = Agents.Append(new Agent(x, y, heading, ref rnd)).ToArray();
-						Scene.Grid[x, y].IsOccupied = true;
-						break;
-					}
-					tries++;
+					float heading = (float)(2 * MathF.PI * rnd.NextDouble());
+					Agents = Agents.Append(new Agent(x, y, heading, ref rnd)).ToArray();
+					Scene.Grid[x, y].IsOccupied = true;
+					break;
 				}
 				break;
 			}
