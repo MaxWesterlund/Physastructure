@@ -6,7 +6,7 @@ public class Simulation {
 
 	public Simulation() {
 		for (int i = 0; i < Settings.AgentCount; i++) {
-			Agents.Add(new Agent(Settings.Size / 2, Settings.Size / 2));
+			Agents.Add(new Agent(rng.Next(Settings.Size), rng.Next(Settings.Size)));
 		}
 	}
 
@@ -21,30 +21,30 @@ public class Simulation {
 
 		for (int i = 0; i < Agents.Count; i++) {
 			switch (Agents[i].State) {
-			case Agent.Action.Skip:
-				continue;
+				case Agent.Action.Skip:
+					continue;
 
-			case Agent.Action.Delete:
-				Scene.Grid[Agents[i].X, Agents[i].Y].IsOccupied = false;
-				Agents.Remove(Agents[i]);
-				break;
+				case Agent.Action.Delete:
+					Scene.Grid[Agents[i].X, Agents[i].Y].IsOccupied = false;
+					Agents.Remove(Agents[i]);
+					break;
 
-			case Agent.Action.Spawn:
-				for (int x = Agents[i].X -1; x < Agents[i].X +1; x++) {
-					for (int y = Agents[i].Y -1; y < Agents[i].Y +1; y++) {
+				case Agent.Action.Spawn:
+					for (int x = Agents[i].X -1; x < Agents[i].X +1; x++) {
+						for (int y = Agents[i].Y -1; y < Agents[i].Y +1; y++) {
 
-						if (Scene.IsOutOfBounds(x, y)) {
-							continue;
-						}
+							if (Scene.IsOutOfBounds(x, y)) {
+								continue;
+							}
 
-						if (!Scene.Grid[x, y].IsOccupied) {
-							Agents.Add(new Agent(x, y));
-							Scene.Grid[x, y].IsOccupied = true;
-							goto brk;
+							if (!Scene.Grid[x, y].IsOccupied) {
+								Agents.Add(new Agent(x, y));
+								Scene.Grid[x, y].IsOccupied = true;
+								goto brk;
+							}
 						}
 					}
-				}
-brk:
+				brk:
 				break;
 			}
 		}
