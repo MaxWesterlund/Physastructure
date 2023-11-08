@@ -15,7 +15,7 @@ AgentCount = 2000
 AgentSpeed = 1.0
 
 SensorAngle = 1.17
-SensorDistance = 10.0
+SensorDistance = 8.0
 SensorSize = 1.0
 
 SporeWeight = 1.0

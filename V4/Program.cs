@@ -79,19 +79,19 @@ start:
 	}
 
 	public static void Input() {
-		if (Raylib.IsKeyPressed(KeyboardKey.KEY_P)) {
+		if (Raylib.IsKeyReleased(KeyboardKey.KEY_P)) {
 			state = state == SimState.Run ? SimState.Pause : SimState.Run;
 		}
-		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_N)) {
+		else if (Raylib.IsKeyReleased(KeyboardKey.KEY_N)) {
 			state = SimState.Next;
 		}
-		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_R)) {
+		else if (Raylib.IsKeyReleased(KeyboardKey.KEY_R)) {
 			state = SimState.Reset;
 		}
-		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_Q)) {
+		else if (Raylib.IsKeyReleased(KeyboardKey.KEY_Q)) {
 			Environment.Exit(0);
 		}
-		else if (Raylib.IsKeyPressed(KeyboardKey.KEY_S)) {
+		else if (Raylib.IsKeyReleased(KeyboardKey.KEY_S)) {
 			Raylib.TakeScreenshot("SPIS" + frame.ToString() + ".png");
 			// TODO: implement real saving of the actuall data not just screenshot
 		}

@@ -5,8 +5,6 @@ public class Agent {
 	public float Heading;
 	public float SporeStrength;
 
-	float townMemory;
-
 	float IEEEX;
 	float IEEEY;
 
@@ -28,18 +26,15 @@ public class Agent {
 
 		rnd = rrnd;
 		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
-
-		townMemory = 0f;
-
 	}
 
-	private struct sensor {
+	private struct Sensor {
 		public float Value;
 		public int ID;
 	}
 
 	public void Sense(Scene scene) {
-		sensor[] sensors = new sensor[3];
+		Sensor[] sensors = new Sensor[3];
 		int height = scene.Grid[X, Y].Height;
 
 		for (int i = 0; i < 3; i++) {
@@ -58,13 +53,13 @@ public class Agent {
 
 		Array.Sort(sensors, (a, b) => b.Value.CompareTo(a.Value));
 	
-		if (sensors[0].Value == float.MinValue) {
+		if (sensors[0].Value == sensors[2].Value) {
 			// random dir
 			Heading += (rnd.Next(3) - 1) * Settings.SensorAngle;
 		}
 		else if (sensors[0].Value == sensors[1].Value) {
 			// chose random of top 2
-			Heading += (sensors[rnd.Next(1)].ID - 1) * Settings.SensorAngle;
+			Heading += (sensors[rnd.Next(2)].ID - 1) * Settings.SensorAngle;
 		}
 		else {
 			Heading += (sensors[0].ID - 1) * Settings.SensorAngle;
@@ -79,8 +74,8 @@ public class Agent {
 
 		float tmpIEEEX = IEEEX + MathF.Cos(Heading) * Settings.AgentSpeed;
 		float tmpIEEEY = IEEEY + MathF.Sin(Heading) * Settings.AgentSpeed;
-		int tmpX = (int)Math.Round(tmpIEEEX, 1);
-		int tmpY = (int)Math.Round(tmpIEEEY, 1);
+		int tmpX = (int)MathF.Round(tmpIEEEX);
+		int tmpY = (int)MathF.Round(tmpIEEEY);
 
 
 		int nCount = scene.GetNeighbourCount(X, Y, 5);
