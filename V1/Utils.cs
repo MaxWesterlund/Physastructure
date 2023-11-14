@@ -1,11 +1,11 @@
 public class CoordData {
-    public int Height;
+    public int MapHeight;
     public float SporeStrength;
     public float PheremoneStrength;
     public bool IsPoint;
 
     public CoordData(bool isPoint) {
-        Height = 0;
+        MapHeight = 0;
         SporeStrength = 0;
         PheremoneStrength = 0;
         IsPoint = isPoint;

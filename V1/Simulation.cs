@@ -2,11 +2,11 @@ using Raylib_cs;
 
 public class Simulation {
     public void Loop() {
-        Raylib.InitWindow(Settings.WIDTH * Settings.RES, Settings.HEIGHT * Settings.RES, "S.P.I.S. - Country Roads since 2023");
+        Raylib.InitWindow(Settings.MapWidth * Settings.RES, Settings.MapHeight * Settings.RES, "S.P.I.S. - Country Roads since 2023");
 
         Agent[] agents = new Agent[Settings.AgentAmount];
         InitAgents(ref agents);
-        CoordData[,] map = new CoordData[Settings.WIDTH, Settings.HEIGHT];
+        CoordData[,] map = new CoordData[Settings.MapWidth, Settings.MapHeight];
         InitMap(ref map);
 
         int progress = 0;
@@ -23,16 +23,16 @@ public class Simulation {
     void InitAgents(ref Agent[] agents) {
         for (int i = 0; i < agents.Length; i++) {
             Random random = new Random();
-            int x = Settings.WIDTH / 2;
-            int y = Settings.HEIGHT / 2;
+            int x = Settings.MapWidth / 2;
+            int y = Settings.MapHeight / 2;
             float a = (float)random.NextDouble() * MathF.PI * 2;
             agents[i] = new Agent(x, y, a);
         }
     }
 
     void InitMap(ref CoordData[,] map) {
-        for (int y = 0; y < Settings.HEIGHT; y++) {
-            for (int x = 0; x < Settings.WIDTH; x++) {
+        for (int y = 0; y < Settings.MapHeight; y++) {
+            for (int x = 0; x < Settings.MapWidth; x++) {
                 map[x, y] = new CoordData(new Random().NextDouble() < 0.0001);
             }
         }
@@ -52,8 +52,8 @@ public class Simulation {
                 coord.PheremoneStrength = 1;
             } 
         }
-        for (int y = 0; y < Settings.HEIGHT; y++) {
-            for (int x = 0; x < Settings.WIDTH; x++) {
+        for (int y = 0; y < Settings.MapHeight; y++) {
+            for (int x = 0; x < Settings.MapWidth; x++) {
                 map[x, y].Decay();
             }
         }
@@ -63,8 +63,8 @@ public class Simulation {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Color.BLACK);
         
-        for (int y = 0; y < Settings.HEIGHT; y++) {
-            for (int x = 0; x < Settings.WIDTH; x++) {
+        for (int y = 0; y < Settings.MapHeight; y++) {
+            for (int x = 0; x < Settings.MapWidth; x++) {
                 CoordData coord = map[x, y];
                 Color color;
                 
