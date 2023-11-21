@@ -18,6 +18,7 @@ SensorAngle = 1.17
 SensorDistance = 8.0
 SensorSize = 1.0
 
+KernelRadius = 3.0
 SporeWeight = 1.0
 SolfluxWeight = 700.0
 HeightWeight = 0.5

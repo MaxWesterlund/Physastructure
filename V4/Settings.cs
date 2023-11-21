@@ -18,6 +18,7 @@ static class Settings {
 	public static float SensorDistance;
 	public static float SensorSize;
 
+	public static int KernelRadius;
 	public static float SporeWeight;
 	public static float SolfluxWeight;
 	public static float HeightWeight;
@@ -52,6 +53,7 @@ static class Settings {
 		SensorDistance = (float)(double)paramsTable["SensorDistance"];
 		SensorSize = (float)(double)paramsTable["SensorSize"];
 		
+		KernelRadius = (int)(long)paramsTable["KernelRadius"];
 		SporeWeight = (float)(double)paramsTable["SporeWeight"];
 		SolfluxWeight = (float)(double)paramsTable["SolfluxWeight"];
 		HeightWeight = (float)(double)paramsTable["HeightWeight"];

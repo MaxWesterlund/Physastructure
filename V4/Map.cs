@@ -1,14 +1,15 @@
 public class Data {
 	public int Height;
-	public float SporeStrength;
-	public float SolfluxStrength;
+
+	public float Solflux;
+	public float NewSolflux;
 
 	public bool IsOccupied;
 
 	public Data() {
 		Height = 0;
-		SporeStrength = 0;
-		SolfluxStrength = 0;
+		Solflux = 0;
+		NewSolflux = 0;
 
 		IsOccupied = false;
 
@@ -16,21 +17,19 @@ public class Data {
 	}
 
 	public void Decay() {
-		SporeStrength *= Settings.DecayRate;
-		if (SporeStrength < 0.001) {
-			SporeStrength = 0f;
-		}
-		
-		SolfluxStrength *= Settings.DecayRate;
-		if (SolfluxStrength < 0.001) {
-			SolfluxStrength = 0f;
+		Solflux = NewSolflux;
+		NewSolflux = 0;
+
+		Solflux *= Settings.DecayRate;
+		if (Solflux < 0.001) {
+			Solflux = 0f;
 		}
 		return;
 	}
 
 	public float Evaluate(int height) {
 		int heightDiff = Math.Abs(height - Height);
-		float value =  SporeStrength * Settings.SporeWeight + SolfluxStrength * Settings.SolfluxWeight - heightDiff * Settings.HeightWeight;
+		float value =  Solflux * Settings.SolfluxWeight - heightDiff * Settings.HeightWeight;
 		return value;
 	}
 }
