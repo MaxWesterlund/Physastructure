@@ -1,12 +1,9 @@
 
 public class Agent {
-	public int X;
-	public int Y;
+	public float X;
+	public float Y;
 	public float Heading;
 	public float SporeStrength;
-
-	float IEEEX;
-	float IEEEY;
 
 	public enum Action {
 		Skip,
@@ -21,9 +18,6 @@ public class Agent {
 		X = xStart;
 		Y = yStart;
 		
-		IEEEX = X;
-		IEEEY = Y;
-
 		rnd = rrnd;
 		Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
 	}
@@ -35,15 +29,15 @@ public class Agent {
 
 	public void Sense(Scene scene) {
 		Sensor[] sensors = new Sensor[3];
-		int height = scene.Grid[X, Y].Height;
+		int height = scene.Grid[(int)X, (int)Y].Height;
 
 		for (int i = 0; i < 3; i++) {
 			sensors[i].ID = i;
 
 			float angle = Heading + (i - 1) * Settings.SensorAngle;
-			int x = (int)(IEEEX + MathF.Cos(angle) * Settings.SensorDistance);
-			int y = (int)(IEEEY + MathF.Sin(angle) * Settings.SensorDistance);
-
+			int x = (int)MathF.Round(X + MathF.Cos(angle) * Settings.SensorDistance);
+			int y = (int)MathF.Round(Y + MathF.Sin(angle) * Settings.SensorDistance);
+			
 			if (scene.IsOutOfBounds(x, y)) {
 				sensors[i].Value = float.MinValue;
 				continue;
@@ -72,33 +66,28 @@ public class Agent {
 
 		State = Action.Skip;
 
-		float tmpIEEEX = IEEEX + MathF.Cos(Heading) * Settings.AgentSpeed;
-		float tmpIEEEY = IEEEY + MathF.Sin(Heading) * Settings.AgentSpeed;
-		int tmpX = (int)MathF.Round(tmpIEEEX);
-		int tmpY = (int)MathF.Round(tmpIEEEY);
+		float tmpX = X + MathF.Cos(Heading) * Settings.AgentSpeed;
+		float tmpY = Y + MathF.Sin(Heading) * Settings.AgentSpeed;
 
-
-		int nCount = scene.GetNeighbourCount(X, Y, 5);
+		int nCount = scene.GetNeighbourCount((int)X, (int)Y, 5);
 		if (nCount > 15) {
 			State = Action.Delete;
 			return;
 		}
 
-		if (scene.IsOutOfBounds(tmpX, tmpY) || scene.Grid[tmpX, tmpY].IsOccupied) {
+		if (scene.IsOutOfBounds((int)tmpX, (int)tmpY) || scene.Grid[(int)tmpX, (int)tmpY].IsOccupied) {
 			Heading = (float)rnd.NextDouble() * 2 * MathF.PI;
 			return;
 		}
 
-		scene.Grid[X, Y].IsOccupied = false;
+		scene.Grid[(int)X, (int)Y].IsOccupied = false;
 		X = tmpX;
 		Y = tmpY;
-		scene.Grid[X, Y].IsOccupied = true;
-		IEEEX = tmpIEEEX;
-		IEEEY = tmpIEEEY;
+		scene.Grid[(int)X, (int)Y].IsOccupied = true;
 
-		scene.Grid[X, Y].SporeStrength += 5;
+		scene.Grid[(int)X, (int)Y].Solflux += Settings.AgentSolflux;
 
-		nCount = scene.GetNeighbourCount(X, Y, 9);
+		nCount = scene.GetNeighbourCount((int)X, (int)Y, 9);
 		if (nCount <= 4) {
 			State = Action.Spawn;
 			return;

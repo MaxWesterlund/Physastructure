@@ -52,17 +52,23 @@ start:
 			for (int y = 0; y < Settings.Height; y++) {
 				Color c;
 
-				if (grid[x, y].SporeStrength > 0) {
-					int pheremoneColor = (int)grid[x, y].SporeStrength * 50 % 255;
-					int solfluxColor = (int)grid[x, y].SolfluxStrength * 50 % 255;
-					c = new Color(pheremoneColor, 50, solfluxColor, 255);
+				if (grid[x, y].Solflux > 0) {
+					int solfluxColor = (int)grid[x, y].Solflux * 50 % 255;
+					c = new Color(50, 0, solfluxColor, 255);
 				}
 				else {
 					continue;
 				}
 
 				if (grid[x, y].IsOccupied && Settings.DrawAgents) {
-					c = Color.WHITE;
+					//c = Color.WHITE;
+				}
+
+				foreach (Node n in sim.Nodes) {
+					if (n.X == x && n.Y == y) {
+						c = Color.GOLD;
+						break;
+					}
 				}
 
 				Raylib.DrawRectangle(x * Settings.Scaling, y * Settings.Scaling, Settings.Scaling, Settings.Scaling, c);

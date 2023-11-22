@@ -2,10 +2,17 @@ public class Simulation {
 
 	public Scene Scene = new Scene();
 	public Agent[] Agents = new Agent[Settings.AgentCount];
+	public Node[] Nodes = new Node[4];
 
 	Random rnd = new Random();
 
 	public Simulation() {
+
+		Nodes[0] = new Node(100, 100);
+		Nodes[1] = new Node(300, 100);
+		Nodes[2] = new Node(200, 200);
+		Nodes[3] = new Node(200, 300);
+
 
 		for (int i = 0; i < Settings.AgentCount; i++) {
 			float h = (float)(2 * MathF.PI * rnd.NextDouble());
@@ -14,7 +21,10 @@ public class Simulation {
 	}
 
 	public void Step() {
-		Scene.Decay();
+
+		foreach (Node n in Nodes) {
+			Scene.Grid[n.X, n.Y].Solflux += Settings.NodeSolflux;
+		}
 
 		ShuffleAgents(ref Agents);
 		foreach (Agent a in Agents) {
@@ -28,7 +38,7 @@ public class Simulation {
 				continue;
 
 			case Agent.Action.Delete:
-				Scene.Grid[Agents[i].X, Agents[i].Y].IsOccupied = false;
+				Scene.Grid[(int)Agents[i].X, (int)Agents[i].Y].IsOccupied = false;
 				RemoveAgent(ref Agents, i);
 				break;
 
@@ -36,8 +46,8 @@ public class Simulation {
 
 				int tries = 0;
 				while (tries < 18) {
-					int x = Agents[i].X + (rnd.Next(3) -1);
-					int y = Agents[i].Y + (rnd.Next(3) -1);
+					int x = (int)Agents[i].X + (rnd.Next(3) -1);
+					int y = (int)Agents[i].Y + (rnd.Next(3) -1);
 					
 					if (Scene.IsOutOfBounds(x, y) || Scene.Grid[x, y].IsOccupied) {
 						tries++;
@@ -52,6 +62,8 @@ public class Simulation {
 				break;
 			}
 		}
+		Scene.DiffuseLattice();
+		Scene.Decay();
 		return;
 	}
 

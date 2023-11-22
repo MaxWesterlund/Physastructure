@@ -42,13 +42,14 @@ public class Scene {
 		}
 	}
 
+	// FIXME: The current implementation heavily smears the solflux towards the bottom left corner
+	// This leads to the entire simulation becoming elongated and it loses the nice "net" structure
 	public void DiffuseLattice() {
 		for (int x = 0; x < Settings.Width; x++) {
 			for (int y = 0; y < Settings.Height; y++) {
 				float value = 0f;
 
-				// FIXME: is of center, kx = -kernelradius is inclusive, kx < radius is exclusive
-				for (int kx = -Settings.KernelRadius; kx < Settings.KernelRadius; kx++) {
+				for (int kx = -Settings.KernelRadius; kx <= Settings.KernelRadius; kx++) {
 					for (int ky = -Settings.KernelRadius; ky < Settings.KernelRadius; ky++) {
 						
 						float kernelValue = kernel[kx + Settings.KernelRadius, ky + Settings.KernelRadius];
@@ -58,6 +59,8 @@ public class Scene {
 
 					}
 				}
+
+				Grid[x, y].NewSolflux = value;
 
 			}
 		}
