@@ -16,18 +16,16 @@ static class Program {
 
         Raylib.InitWindow(Window.Size, Window.Size, "Physastructure");
         while (!Raylib.WindowShouldClose()) {
-            Step(ref decayMap, agents, pheremones);
+            Step(ref decayMap, agents);
             Draw(decayMap);
         }
         Raylib.CloseWindow();
     }
 
-    static void Step(ref float[,] decayMap, List<Agent> agents, List<Pheremone> pheremones) {
+    static void Step(ref float[,] decayMap, List<Agent> agents) {
         foreach (Agent agent in agents) {
-            agent.Move(pheremones);
-        }
-        for (int i = pheremones.Count - 1; i > -1; i--) {
-            pheremones[i].Spread(ref decayMap, pheremones);
+            agent.Move(decayMap);
+            agent.LeaveSpore(decayMap);
         }
         for (int y = 0; y < Simulation.Size; y++) {
             for (int x = 0; x < Simulation.Size; x++) {
