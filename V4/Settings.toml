@@ -4,7 +4,7 @@ Height = 400
 
 Scaling = 2
 FrameSkip = 50
-DrawAgents = true
+DrawAgents = false
 
 SplashText = "S.P.I.S. - Country Roads since 2023"
 
@@ -15,13 +15,13 @@ AgentCount = 2000
 AgentSpeed = 1.0
 AgentSolflux = 5.0
 
-NodeSolflux = 100.0
+NodeSolflux = 50.0
 
 SensorAngle = 1.17
 SensorDistance = 8.0
 SensorSize = 1.0
 
-KernelRadius = 1
+KernelRadius = 3
 SporeWeight = 1.0
 SolfluxWeight = 700.0
 HeightWeight = 0.5

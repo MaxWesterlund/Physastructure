@@ -61,7 +61,7 @@ start:
 				}
 
 				if (grid[x, y].IsOccupied && Settings.DrawAgents) {
-					//c = Color.WHITE;
+					c = Color.WHITE;
 				}
 
 				foreach (Node n in sim.Nodes) {

@@ -66,8 +66,8 @@ public class Agent {
 
 		State = Action.Skip;
 
-		float tmpX = X + MathF.Cos(Heading) * Settings.AgentSpeed;
-		float tmpY = Y + MathF.Sin(Heading) * Settings.AgentSpeed;
+		float tmpX = X + MathF.Round(MathF.Cos(Heading) * Settings.AgentSpeed);
+		float tmpY = Y + MathF.Round(MathF.Sin(Heading) * Settings.AgentSpeed);
 
 		int nCount = scene.GetNeighbourCount((int)X, (int)Y, 5);
 		if (nCount > 15) {

@@ -2,17 +2,15 @@ public class Simulation {
 
 	public Scene Scene = new Scene();
 	public Agent[] Agents = new Agent[Settings.AgentCount];
-	public Node[] Nodes = new Node[4];
+	public Node[] Nodes = new Node[8];
 
 	Random rnd = new Random();
 
 	public Simulation() {
 
-		Nodes[0] = new Node(100, 100);
-		Nodes[1] = new Node(300, 100);
-		Nodes[2] = new Node(200, 200);
-		Nodes[3] = new Node(200, 300);
-
+		for (int i = 0; i < Nodes.Length; i++) {
+			Nodes[i] = new Node(rnd.Next(Settings.Width -1), rnd.Next(Settings.Height -1));
+		}
 
 		for (int i = 0; i < Settings.AgentCount; i++) {
 			float h = (float)(2 * MathF.PI * rnd.NextDouble());
