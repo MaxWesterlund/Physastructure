@@ -45,10 +45,6 @@ public class Agent {
         }
         
         Vector2 wantedPos = pos + Settings.AgentSpeed * dir;
-        // Map.DiscoveredMap[(int)wantedPos.X, (int)wantedPos.Y] = true;
-
-        // Map.OccupiedMap[(int)pos.X, (int)pos.Y] = false;
-        // Map.OccupiedMap[(int)wantedPos.X, (int)wantedPos.Y] = true;
         
         pos = wantedPos;
     }
