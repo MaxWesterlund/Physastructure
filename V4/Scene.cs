@@ -12,32 +12,24 @@ public class Scene {
 			}
 		}
 		
-		GenerateDiffuseKernel(Settings.KernelRadius);
-	
-		for (int i = 0; i < Settings.KernelRadius * 2; i++) {
-			for (int j = 0; j < Settings.KernelRadius * 2; j++) {
-				Console.Write(kernel[i, j].ToString() + ", ");
-			}
-			Console.Write("\n");
-		}
+		GenerateDiffuseKernel();
 	}
 
-	// TODO: does not need radius argument since it is always Settings.KernelRadius
-	void GenerateDiffuseKernel(int radius) {
-		float sigma = MathF.Max((float)radius / 2, 2);
-		int kernelWidth = 2 * radius + 1;
+	void GenerateDiffuseKernel() {
+		float sigma = MathF.Max((float)Settings.KernelRadius / 2, 2);
+		int kernelWidth = 2 * Settings.KernelRadius + 1;
 		kernel = new float[2 * kernelWidth, 2 * kernelWidth];
 		float sum = 0f;
 
-		for (int x = -radius; x <= radius; x++) {
-			for (int y = -radius; y <= radius; y++) {
-				float exponentNumerator = (float)(-x * x + y * y);
+		for (int x = -Settings.KernelRadius; x <= Settings.KernelRadius; x++) {
+			for (int y = -Settings.KernelRadius; y <= Settings.KernelRadius; y++) {
+				float exponentNumerator = (float)-(x * x + y * y);
 				float exponentDenominator = 2f * sigma * sigma;
 
 				float eExpression = MathF.Pow(MathF.E, exponentNumerator / exponentDenominator);
 				float kernelValue = (eExpression / (2f * MathF.PI * sigma * sigma));
 
-				kernel[x + radius, y + radius] = kernelValue;
+				kernel[x + Settings.KernelRadius, y + Settings.KernelRadius] = kernelValue;
 				sum += kernelValue;
 			}
 		}
@@ -45,9 +37,7 @@ public class Scene {
 		for (int x = 0; x < kernelWidth; x++) {
 			for (int y = 0; y < kernelWidth; y++) {
 				kernel[x, y] /= sum;
-				Console.Write(kernel[x, y].ToString() + ", ");
 			}
-			Console.WriteLine("");
 		}
 	}
 

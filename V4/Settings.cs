@@ -19,10 +19,10 @@ static class Settings {
 	public static float SensorSize;
 	public static float AgentSolflux;
 
+	public static int NodeCount;
 	public static float NodeSolflux;
 
 	public static int KernelRadius;
-	public static float SporeWeight;
 	public static float SolfluxWeight;
 	public static float HeightWeight;
 
@@ -53,6 +53,7 @@ static class Settings {
 		AgentSpeed = (float)(double)paramsTable["AgentSpeed"];
 		AgentSolflux = (float)(double)paramsTable["AgentSolflux"];
 
+		NodeCount = (int)(long)paramsTable["NodeCount"];
 		NodeSolflux = (float)(double)paramsTable["NodeSolflux"];
 
 		SensorAngle = (float)(double)paramsTable["SensorAngle"];
@@ -60,7 +61,6 @@ static class Settings {
 		SensorSize = (float)(double)paramsTable["SensorSize"];
 		
 		KernelRadius = (int)(long)paramsTable["KernelRadius"];
-		SporeWeight = (float)(double)paramsTable["SporeWeight"];
 		SolfluxWeight = (float)(double)paramsTable["SolfluxWeight"];
 		HeightWeight = (float)(double)paramsTable["HeightWeight"];
 	

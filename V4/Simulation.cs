@@ -2,7 +2,7 @@ public class Simulation {
 
 	public Scene Scene = new Scene();
 	public Agent[] Agents = new Agent[Settings.AgentCount];
-	public Node[] Nodes = new Node[8];
+	public Node[] Nodes = new Node[Settings.NodeCount];
 
 	Random rnd = new Random();
 
@@ -18,6 +18,7 @@ public class Simulation {
 		}
 	}
 
+	// TODO: Make the agents deposite solfux into the temporary lattice and switch them after the move phase
 	public void Step() {
 
 		foreach (Node n in Nodes) {
