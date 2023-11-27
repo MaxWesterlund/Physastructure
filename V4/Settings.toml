@@ -3,7 +3,7 @@ Width = 400
 Height = 400
 
 Scaling = 2
-FrameSkip = 100
+FrameSkip = 50
 DrawAgents = true
 
 SplashText = "S.P.I.S. - Country Roads since 2023"
@@ -23,5 +23,5 @@ SensorDistance = 8.0
 SensorSize = 1.0
 
 KernelRadius = 5
-SolfluxWeight = 700.0
+SolfluxWeight = 1.0
 HeightWeight = 0.5

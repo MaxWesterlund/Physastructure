@@ -18,18 +18,23 @@ public class Simulation {
 		}
 	}
 
-	// TODO: Make the agents deposite solfux into the temporary lattice and switch them after the move phase
 	public void Step() {
 
-		foreach (Node n in Nodes) {
-			Scene.Grid[n.X, n.Y].Solflux += Settings.NodeSolflux;
-		}
 
 		ShuffleAgents(ref Agents);
 		foreach (Agent a in Agents) {
 			a.Sense(Scene);
+		}
+		
+		foreach (Node n in Nodes) {
+			Scene.Grid[n.X, n.Y].Solflux += Settings.NodeSolflux;
+		}
+
+		foreach (Agent a in Agents) {
 			a.Move(ref Scene);
 		}
+		Scene.DiffuseLattice();
+		Scene.Decay();
 
 		for (int i = Agents.Length -1; i >= 0; i--) {
 			switch (Agents[i].State) {
@@ -61,8 +66,6 @@ public class Simulation {
 				break;
 			}
 		}
-		Scene.DiffuseLattice();
-		Scene.Decay();
 		return;
 	}
 
