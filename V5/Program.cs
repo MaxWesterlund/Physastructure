@@ -8,18 +8,16 @@ static class Program {
     static void Main() {
         bool pointsPlaced = false;
 
-        float[,] decayMap = new float[Simulation.Size, Simulation.Size];
-        bool[,] pointMap = new bool[Simulation.Size, Simulation.Size];
+        CoordinateData[,] grid = new CoordinateData[Simulation.Size, Simulation.Size];
         List<Agent> agents = new();
 
         int step = 0;
          
         for (int i = 0; i < Simulation.AgentAmount; i++) {
             Vector2 center = new Vector2(Simulation.Size / 2);
-            Vector2 position = new Vector2(Simulation.Size / 2 - Simulation.AgentSpawnRadius + random.Next(Simulation.AgentSpawnRadius * 2), Simulation.Size / 2 - Simulation.AgentSpawnRadius + random.Next(Simulation.AgentSpawnRadius * 2));
-            while (Vector2.Distance(position, center) > Simulation.AgentSpawnRadius) {
-                position = new Vector2(Simulation.Size / 2 - Simulation.AgentSpawnRadius + random.Next(Simulation.AgentSpawnRadius * 2), Simulation.Size / 2 - Simulation.AgentSpawnRadius + random.Next(Simulation.AgentSpawnRadius * 2));
-
+            Vector2 position = new Vector2(random.Next(Simulation.Size), random.Next(Simulation.Size));
+            while (!Utils.IsWithinBounds(position)) {
+                position = new Vector2(random.Next(Simulation.Size), random.Next(Simulation.Size));
             }
             Agent agent = new Agent((int)Math.Round(position.X), (int)Math.Round(position.Y),  (float)random.NextDouble() * 2 * MathF.PI);
             agents.Add(agent);
@@ -31,18 +29,18 @@ static class Program {
                 pointsPlaced = true;
             }
             if (!pointsPlaced) {
-                PlacePoints(pointMap);
+                PlacePoints(grid);
             }
             else {
-                Step(decayMap, pointMap, agents);
+                Step(grid, agents);
                 step++;
             }
-            Draw(decayMap, pointMap, step);
+            Draw(grid, step);
         }
         Raylib.CloseWindow();
     }
 
-    static void PlacePoints(bool[,] pointMap) {
+    static void PlacePoints(CoordinateData[,] grid) {
         if (!Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) return;
 
         float ratio = (float)Simulation.Size / Window.Size;
@@ -55,26 +53,26 @@ static class Program {
         for (int x = Math.Clamp(xCoord - Simulation.PointRadius, 0, Simulation.Size - 1); x < Math.Clamp(xCoord + Simulation.PointRadius, 0, Simulation.Size - 1); x++) {
             for (int y = Math.Clamp(yCoord - Simulation.PointRadius, 0, Simulation.Size - 1); y < Math.Clamp(yCoord + Simulation.PointRadius, 0, Simulation.Size - 1); y++) {
                 Vector2 coord = new Vector2(x, y);
-                if (Vector2.Distance(coord, center) > Simulation.PointRadius) continue;
+                if (Vector2.Distance(coord, center) > Simulation.PointRadius || !Utils.IsWithinBounds(coord)) continue;
 
-                pointMap[x, y] = true;
+                grid[x, y].IsPoint = true;
             }
         }
     }
 
-    static void Step(float[,] decayMap, bool[,] pointMap, List<Agent> agents) {
+    static void Step(CoordinateData[,] grid, List<Agent> agents) {
         foreach (Agent agent in agents) {
-            agent.Move(decayMap, pointMap);
-            agent.LeaveSpore(decayMap);
+            agent.Move(grid);
+            agent.LeaveSpore(grid);
         }
         for (int y = 0; y < Simulation.Size; y++) {
             for (int x = 0; x < Simulation.Size; x++) {
-                decayMap[x, y] *= Simulation.DecayRate;
+                grid[x, y].Strength *= Simulation.DecayRate;
             }
         }
     }
 
-    static void Draw(float[,] decayMap, bool[,] pointMap, int step) {
+    static void Draw(CoordinateData[,] grid, int step) {
         Raylib.BeginDrawing();
 
         Raylib.ClearBackground(Window.BackgroundColor);
@@ -91,8 +89,10 @@ static class Program {
                     for (int x2 = 0; x2 < Window.Resolution; x2++) {
                         int xCoord = x * Window.Resolution + x2;
                         int yCoord = y * Window.Resolution + y2;
-                        avg += decayMap[xCoord, yCoord];
-                        isPoint = pointMap[xCoord, yCoord];
+                        avg += grid[xCoord, yCoord].Strength;
+                        if (grid[xCoord, yCoord].IsPoint) {
+                            isPoint = true;
+                        }
                     }
                 }
                 avg /= Window.Resolution * Window.Resolution;
@@ -100,7 +100,13 @@ static class Program {
                 int r = (int)(avg * Window.SlimeColor.R);
                 int g = (int)(avg * Window.SlimeColor.G);
                 int b = (int)(avg * Window.SlimeColor.B);
-                Color color = isPoint ? Window.PointColor : new Color(r, g, b, 255);
+                Color color;
+                if (isPoint) {
+                    color = Window.PointColor;
+                }
+                else {
+                    color = new Color(r, g, b, 255);
+                }
                 Raylib.DrawRectangle(x * positionFactor, y * positionFactor, ratio * Window.Resolution, ratio * Window.Resolution, color);
             }
         }
