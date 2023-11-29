@@ -25,7 +25,7 @@ public class Program {
 		while (!Raylib.WindowShouldClose()) {
 			sim.Step();
 
-			if (frame % Settings.FrameSkip == 0) {
+			if (frame % Settings.FrameSkip == 0 || !sim.NodesPlaced) {
 				Draw();
 			}
 
@@ -45,29 +45,29 @@ public class Program {
 			for (int y = 0; y < Settings.Height; y++) {
 				Color c;
 
-				if (grid[x, y].Solflux > 0) {
-					int solfluxColor = (int)grid[x, y].Solflux * 50 % 255;
-					c = new Color(50, 0, solfluxColor, 255);
-				}
-				else {
+				if (grid[x, y].Solflux <= 0) {
 					continue;
 				}
 
-				if (grid[x, y].IsOccupied && Settings.DrawAgents) {
-					c = Color.WHITE;
-				}
-
-				foreach (Node n in sim.Nodes) {
-					if (n.X == x && n.Y == y) {
-						Raylib.DrawRectangle(x * Settings.Scaling - 5, y * Settings.Scaling - 5, 10, 10, Color.PINK);
-						break;
-					}
-				}
+				int solfluxColor = (int)grid[x, y].Solflux * 50 % 255;
+				c = new Color(50, 0, solfluxColor, 255);
 
 				Raylib.DrawRectangle(x * Settings.Scaling, y * Settings.Scaling, Settings.Scaling, Settings.Scaling, c);
-			
 			}
 		}
+				
+		if (Settings.DrawAgents) {
+			foreach (Agent a in sim.Agents) {
+				Raylib.DrawRectangle((int)a.X * Settings.Scaling, (int)a.Y * Settings.Scaling, Settings.Scaling, Settings.Scaling, Color.WHITE);
+
+			}
+		}
+
+
+		foreach (Node n in sim.Nodes) {
+			Raylib.DrawRectangle(n.X * Settings.Scaling - 5, n.Y * Settings.Scaling - 5, 10, 10, Color.PINK);
+		}
+	
 		Raylib.DrawText(frame.ToString(), 15, 15, 20, Color.WHITE);
 		Raylib.EndDrawing();
 
