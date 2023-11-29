@@ -37,7 +37,7 @@ public class Agent {
         Sensor bestChoice = sensors[1];
         for (int i = 0; i < sensors.Length; i++) {
             Sensor sensor = sensors[i];
-            if (sensor.Pheremone > bestChoice.Pheremone) {
+            if (sensor.Spore > bestChoice.Spore) {
                 bestChoice = sensor;
             }
         }
@@ -59,7 +59,7 @@ public class Agent {
     }
 
     public void LeaveSpore(CoordinateData[,] grid) {
-        grid[Math.Clamp((int)Math.Round(position.X), 0, Simulation.Size - 1), Math.Clamp((int)Math.Round(position.Y), 0, Simulation.Size - 1)].Strength = 1;
+        grid[Math.Clamp((int)Math.Round(position.X), 0, Simulation.Size - 1), Math.Clamp((int)Math.Round(position.Y), 0, Simulation.Size - 1)].SporeStrength = 1;
     }
 
     Vector2 DirectionFromAngle(float a) {
@@ -68,11 +68,11 @@ public class Agent {
 
     class Sensor {
         public float Angle;
-        public float Pheremone;
+        public float Spore;
 
-        public Sensor(float angle, float pheremone) {
+        public Sensor(float angle, float spore) {
             Angle = angle;
-            Pheremone = pheremone;
+            Spore = spore;
         }
     }
 }

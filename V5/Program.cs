@@ -6,7 +6,7 @@ static class Program {
     static Random random = new Random();
     
     static void Main() {
-        bool pointsPlaced = false;
+        bool nodes = false;
 
         CoordinateData[,] grid = new CoordinateData[Simulation.Size, Simulation.Size];
         List<Agent> agents = new();
@@ -26,9 +26,9 @@ static class Program {
         Raylib.InitWindow(Window.Size, Window.Size, "Physastructure");
         while (!Raylib.WindowShouldClose()) {
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER)) {
-                pointsPlaced = true;
+                nodes = true;
             }
-            if (!pointsPlaced) {
+            if (!nodes) {
                 PlacePoints(grid);
             }
             else {
@@ -50,12 +50,12 @@ static class Program {
         int yCoord = (int)Math.Round(mousePos.Y);
         Vector2 center = new Vector2(xCoord, yCoord);
 
-        for (int x = Math.Clamp(xCoord - Simulation.PointRadius, 0, Simulation.Size - 1); x < Math.Clamp(xCoord + Simulation.PointRadius, 0, Simulation.Size - 1); x++) {
-            for (int y = Math.Clamp(yCoord - Simulation.PointRadius, 0, Simulation.Size - 1); y < Math.Clamp(yCoord + Simulation.PointRadius, 0, Simulation.Size - 1); y++) {
+        for (int x = Math.Clamp(xCoord - Simulation.PointRadius, 0, Simulation.Size - 1); x < Math.Clamp(xCoord + Simulation.PointRadius, 0, Simulation.Size - 1) + 1; x++) {
+            for (int y = Math.Clamp(yCoord - Simulation.PointRadius, 0, Simulation.Size - 1); y < Math.Clamp(yCoord + Simulation.PointRadius, 0, Simulation.Size - 1) + 1; y++) {
                 Vector2 coord = new Vector2(x, y);
                 if (Vector2.Distance(coord, center) > Simulation.PointRadius || !Utils.IsWithinBounds(coord)) continue;
 
-                grid[x, y].IsPoint = true;
+                grid[x, y].IsNode = true;
             }
         }
     }
@@ -67,7 +67,7 @@ static class Program {
         }
         for (int y = 0; y < Simulation.Size; y++) {
             for (int x = 0; x < Simulation.Size; x++) {
-                grid[x, y].Strength *= Simulation.DecayRate;
+                grid[x, y].SporeStrength *= Simulation.DecayRate;
             }
         }
     }
@@ -89,8 +89,8 @@ static class Program {
                     for (int x2 = 0; x2 < Window.Resolution; x2++) {
                         int xCoord = x * Window.Resolution + x2;
                         int yCoord = y * Window.Resolution + y2;
-                        avg += grid[xCoord, yCoord].Strength;
-                        if (grid[xCoord, yCoord].IsPoint) {
+                        avg += grid[xCoord, yCoord].SporeStrength;
+                        if (grid[xCoord, yCoord].IsNode) {
                             isPoint = true;
                         }
                     }

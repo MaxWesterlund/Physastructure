@@ -28,7 +28,10 @@ public class Program {
 			if (frame % Settings.FrameSkip == 0) {
 				Draw();
 			}
-			frame++;
+
+			if (sim.NodesPlaced) {
+				frame++;
+			}
 		}
 	}
 

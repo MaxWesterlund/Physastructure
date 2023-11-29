@@ -1,17 +1,17 @@
+using System.Numerics;
+using Raylib_cs;
+
 public class Simulation {
 
 	public Scene Scene = new Scene();
 	public Agent[] Agents = new Agent[Settings.AgentCount];
-	public Node[] Nodes = new Node[Settings.NodeCount];
+	public List<Node> Nodes = new();
 
 	Random rnd = new Random();
 
+	public bool NodesPlaced = false;
+
 	public Simulation() {
-
-		for (int i = 0; i < Nodes.Length; i++) {
-			Nodes[i] = new Node(rnd.Next(Settings.Width -1), rnd.Next(Settings.Height -1));
-		}
-
 		for (int i = 0; i < Settings.AgentCount; i++) {
 			float h = (float)(2 * MathF.PI * rnd.NextDouble());
 			Agents[i] = new Agent(rnd.Next(Settings.Width), rnd.Next(Settings.Height), h, ref rnd);
@@ -19,6 +19,16 @@ public class Simulation {
 	}
 
 	public void Step() {
+		if (!NodesPlaced) {
+			if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) {
+				Vector2 pos = Raylib.GetMousePosition() / Settings.Scaling;
+				Nodes.Add(new Node((int)Math.Round(pos.X), (int)Math.Round(pos.Y)));
+			}
+			if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER)) {
+				NodesPlaced = true;
+			}
+			return;
+		}
 
 
 		ShuffleAgents(ref Agents);
