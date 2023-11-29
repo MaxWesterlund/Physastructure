@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics.Tracing;
+using System.Numerics;
+using System.Text;
 using Raylib_cs;
 using Settings;
 
@@ -6,7 +8,7 @@ static class Program {
     static Random random = new Random();
     
     static void Main() {
-        bool nodes = false;
+        bool nodesPlaced = false;
 
         CoordinateData[,] grid = new CoordinateData[Simulation.Size, Simulation.Size];
         List<Agent> agents = new();
@@ -25,22 +27,32 @@ static class Program {
 
         Raylib.InitWindow(Window.Size, Window.Size, "Physastructure");
         while (!Raylib.WindowShouldClose()) {
+            Control();
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER)) {
-                nodes = true;
+                nodesPlaced = true;
             }
-            if (!nodes) {
-                PlacePoints(grid);
+            if (!nodesPlaced) {
+                PlaceNodes(grid);
             }
             else {
                 Step(grid, agents);
                 step++;
             }
-            Draw(grid, step);
+            Draw(grid, agents, step);
         }
         Raylib.CloseWindow();
     }
 
-    static void PlacePoints(CoordinateData[,] grid) {
+    static void Control() {
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP)) {
+            Window.Resolution++;
+        }
+        if (Raylib.IsKeyPressed(KeyboardKey.KEY_DOWN) && Window.Resolution > 1) {
+            Window.Resolution--;
+        }
+    }
+
+    static void PlaceNodes(CoordinateData[,] grid) {
         if (!Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) return;
 
         float ratio = (float)Simulation.Size / Window.Size;
@@ -50,12 +62,18 @@ static class Program {
         int yCoord = (int)Math.Round(mousePos.Y);
         Vector2 center = new Vector2(xCoord, yCoord);
 
-        for (int x = Math.Clamp(xCoord - Simulation.PointRadius, 0, Simulation.Size - 1); x < Math.Clamp(xCoord + Simulation.PointRadius, 0, Simulation.Size - 1) + 1; x++) {
-            for (int y = Math.Clamp(yCoord - Simulation.PointRadius, 0, Simulation.Size - 1); y < Math.Clamp(yCoord + Simulation.PointRadius, 0, Simulation.Size - 1) + 1; y++) {
+        for (int x = Math.Clamp(xCoord - Simulation.NodeSpreadRadius, 0, Simulation.Size - 1); x < Math.Clamp(xCoord + Simulation.NodeSpreadRadius, 0, Simulation.Size - 1) + 1; x++) {
+            for (int y = Math.Clamp(yCoord - Simulation.NodeSpreadRadius, 0, Simulation.Size - 1); y < Math.Clamp(yCoord + Simulation.NodeSpreadRadius, 0, Simulation.Size - 1) + 1; y++) {
                 Vector2 coord = new Vector2(x, y);
-                if (Vector2.Distance(coord, center) > Simulation.PointRadius || !Utils.IsWithinBounds(coord)) continue;
+                float dist = Vector2.Distance(coord, center);
+                if (dist > Simulation.NodeSpreadRadius || !Utils.IsWithinBounds(coord)) continue;
 
-                grid[x, y].IsNode = true;
+                float value = 1 - dist / Simulation.NodeSpreadRadius;
+                grid[x, y].NodeStrength = value;
+
+                if (Vector2.Distance(coord, center) <= Window.NodeRadius) {
+                    grid[x, y].IsNode = true; 
+                }
             }
         }
     }
@@ -72,7 +90,7 @@ static class Program {
         }
     }
 
-    static void Draw(CoordinateData[,] grid, int step) {
+    static void Draw(CoordinateData[,] grid, List<Agent> agents, int step) {
         Raylib.BeginDrawing();
 
         Raylib.ClearBackground(Window.BackgroundColor);
@@ -83,29 +101,39 @@ static class Program {
 
         for (int y = 0; y < length; y++) {
             for (int x = 0; x < length; x++) {
-                float avg = 0;
-                bool isPoint = false;
+                float avgSpore = 0;
+                float avgNode = 0;
+                bool isNode = false;
+                bool isOutOfBounds = false;
                 for (int y2 = 0; y2 < Window.Resolution; y2++) {
                     for (int x2 = 0; x2 < Window.Resolution; x2++) {
                         int xCoord = x * Window.Resolution + x2;
                         int yCoord = y * Window.Resolution + y2;
-                        avg += grid[xCoord, yCoord].SporeStrength;
+                        avgSpore += grid[xCoord, yCoord].SporeStrength;
+                        avgNode += grid[xCoord, yCoord].NodeStrength;
                         if (grid[xCoord, yCoord].IsNode) {
-                            isPoint = true;
+                            isNode = true;
+                        }
+                        if (!Utils.IsWithinBounds(new Vector2(xCoord, yCoord))) {
+                            isOutOfBounds = true;
                         }
                     }
                 }
-                avg /= Window.Resolution * Window.Resolution;
+                avgSpore /= Window.Resolution * Window.Resolution;
+                avgNode /= Window.Resolution * Window.Resolution;
 
-                int r = (int)(avg * Window.SlimeColor.R);
-                int g = (int)(avg * Window.SlimeColor.G);
-                int b = (int)(avg * Window.SlimeColor.B);
+                int s = (int)(avgSpore * 255);
+                int n = (int)(avgNode * 255);
+
                 Color color;
-                if (isPoint) {
-                    color = Window.PointColor;
+                if (isNode) {
+                    color = Window.NodeColor;
+                }
+                else if (!isOutOfBounds) {
+                    color = new Color(s, s, 0, 255);
                 }
                 else {
-                    color = new Color(r, g, b, 255);
+                    color = Window.BorderColor;
                 }
                 Raylib.DrawRectangle(x * positionFactor, y * positionFactor, ratio * Window.Resolution, ratio * Window.Resolution, color);
             }

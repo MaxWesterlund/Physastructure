@@ -1,14 +1,15 @@
 public struct CoordinateData {
     public float SporeStrength;
+    public float NodeStrength;
     public bool IsNode;
 
     public CoordinateData() {
         SporeStrength = 0;
-        IsNode = false;
+        NodeStrength = 0;
     }
 
     public float Evaluate() {
-        float value = IsNode ? 2 : SporeStrength;
+        float value = SporeStrength + NodeStrength * 3;
         return value;
     }
 }

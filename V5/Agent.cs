@@ -47,11 +47,17 @@ public class Agent {
         }
         
         Vector2 wantedPos = position + direction;
+        int tries = 0;
         while (!Utils.IsWithinBounds(wantedPos)) {
             Vector2 center = new Vector2(Simulation.Size / 2, Simulation.Size / 2);
-            Vector2 normal = wantedPos - center;
+            if (tries == 3) {
+                wantedPos = center;
+                break;
+            }
+            Vector2 normal = center - wantedPos;
             direction = Vector2.Reflect(direction, normal);
             wantedPos = position + direction;
+            tries++;
         }
         
         heading = MathF.Atan2(direction.Y, direction.X);
@@ -59,7 +65,7 @@ public class Agent {
     }
 
     public void LeaveSpore(CoordinateData[,] grid) {
-        grid[Math.Clamp((int)Math.Round(position.X), 0, Simulation.Size - 1), Math.Clamp((int)Math.Round(position.Y), 0, Simulation.Size - 1)].SporeStrength = 1;
+        grid[(int)Math.Clamp(Math.Round(position.X), 0, Simulation.Size - 1), (int)Math.Clamp(Math.Round(position.Y), 0, Simulation.Size - 1)].SporeStrength = 1;
     }
 
     Vector2 DirectionFromAngle(float a) {
