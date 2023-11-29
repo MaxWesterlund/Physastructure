@@ -11,7 +11,7 @@ SplashText = "S.P.I.S. - Country Roads since 2023"
 [parameters]
 DecayRate = 0.9
 
-AgentCount = 2000
+AgentCount = 7000
 AgentSpeed = 1.0
 AgentSolflux = 5.0
 
