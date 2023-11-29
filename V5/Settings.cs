@@ -22,6 +22,6 @@ namespace Settings {
         public const float AgentTurnAngle = 0.5f;
         public const float AgentSensorDistance = 5;
 
-        public const float DecayRate = 0.99f;
+        public const float DecayRate = 0.999f;
     }
 }
