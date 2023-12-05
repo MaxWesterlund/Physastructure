@@ -16,12 +16,14 @@ namespace Settings {
     class Simulation {
         public const int Size = 200;
 
-        public const int NodeSpreadRadius = 5;
+        public const int KernelRadius = 0;
 
-        public const int AgentAmount = 2000;
+        public const int NodeSpreadRadius = 10;
+
+        public const int AgentAmount = 10000;
         public const float AgentTurnAngle = 0.5f;
         public const float AgentSensorDistance = 5;
 
-        public const float DecayRate = 0.999f;
+        public const float DecayRate = 0.99f;
     }
 }

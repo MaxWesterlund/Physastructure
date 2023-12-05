@@ -9,9 +9,12 @@ static class Program {
     
     static void Main() {
         bool nodesPlaced = false;
+        bool isPaused = false;
 
         CoordinateData[,] grid = new CoordinateData[Simulation.Size, Simulation.Size];
         List<Agent> agents = new();
+
+        float[,] diffuseKernel = GenerateDiffuseKernel();
 
         int step = 0;
          
@@ -28,20 +31,55 @@ static class Program {
         Raylib.InitWindow(Window.Size, Window.Size, "Physastructure");
         while (!Raylib.WindowShouldClose()) {
             Control();
+            if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE)) {
+                isPaused = !isPaused;
+            }
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_ENTER)) {
                 nodesPlaced = true;
             }
-            if (!nodesPlaced) {
+            
+            if (!isPaused) {
+                if (!nodesPlaced) {
                 PlaceNodes(grid);
+                }
+                else {
+                    Step(grid, agents, diffuseKernel);
+                    step++;
+                }
             }
-            else {
-                Step(grid, agents);
-                step++;
-            }
+
             Draw(grid, agents, step);
         }
         Raylib.CloseWindow();
     }
+
+    static float[,] GenerateDiffuseKernel() {
+		float sigma = MathF.Max((float)Simulation.KernelRadius / 2, 2);
+		int kernelWidth = 2 * Simulation.KernelRadius + 1;
+		float[,] kernel = new float[2 * kernelWidth, 2 * kernelWidth];
+		float sum = 0f;
+
+		for (int x = -Simulation.KernelRadius; x <= Simulation.KernelRadius; x++) {
+			for (int y = -Simulation.KernelRadius; y <= Simulation.KernelRadius; y++) {
+				float exponentNumerator = (float)-(x * x + y * y);
+				float exponentDenominator = 2f * sigma * sigma;
+
+				float eExpression = MathF.Pow(MathF.E, exponentNumerator / exponentDenominator);
+				float kernelValue = (eExpression / (2f * MathF.PI * sigma * sigma));
+
+				kernel[x + Simulation.KernelRadius, y + Simulation.KernelRadius] = kernelValue;
+				sum += kernelValue;
+			}
+		}
+
+		for (int x = 0; x < kernelWidth; x++) {
+			for (int y = 0; y < kernelWidth; y++) {
+				kernel[x, y] /= sum;
+			}
+		}
+        
+        return kernel;
+	}
 
     static void Control() {
         if (Raylib.IsKeyPressed(KeyboardKey.KEY_UP)) {
@@ -78,11 +116,13 @@ static class Program {
         }
     }
 
-    static void Step(CoordinateData[,] grid, List<Agent> agents) {
+    static void Step(CoordinateData[,] grid, List<Agent> agents, float[,] diffuseKernel) {
+        Utils.Shuffle(agents);
         foreach (Agent agent in agents) {
             agent.Move(grid);
             agent.LeaveSpore(grid);
         }
+        // DiffuseGrid(grid, diffuseKernel);
         for (int y = 0; y < Simulation.Size; y++) {
             for (int x = 0; x < Simulation.Size; x++) {
                 grid[x, y].SporeStrength *= Simulation.DecayRate;
@@ -144,4 +184,26 @@ static class Program {
 
         Raylib.EndDrawing();
     }
+
+    static void DiffuseGrid(CoordinateData[,] grid, float[,] kernel) {
+		for (int x = 0; x < Simulation.Size; x++) {
+			for (int y = 0; y < Simulation.Size; y++) {
+				float value = 0f;
+
+				for (int kx = -Simulation.KernelRadius; kx <= Simulation.KernelRadius; kx++) {
+					for (int ky = -Simulation.KernelRadius; ky <= Simulation.KernelRadius; ky++) {
+						
+						float kernelValue = kernel[kx + Simulation.KernelRadius, ky + Simulation.KernelRadius];
+						int offsetX = Math.Clamp(x + kx, 0, Simulation.Size -1);
+						int offsetY = Math.Clamp(y + ky, 0, Simulation.Size -1);
+						value += grid[offsetX, offsetY].SporeStrength * kernelValue;
+
+					}
+				}
+
+				grid[x, y].SporeStrength = value;
+
+			}
+		}
+	}
 }
