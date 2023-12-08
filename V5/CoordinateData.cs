@@ -1,6 +1,7 @@
 public struct CoordinateData {
     public float SporeStrength;
     public float NodeStrength;
+    public bool IsObstacle;
     public bool IsNode;
 
     public CoordinateData() {

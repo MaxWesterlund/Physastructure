@@ -6,7 +6,7 @@ using Settings;
 
 static class Program {
     static Random random = new Random();
-    
+
     static void Main() {
         bool nodesPlaced = false;
         bool isPaused = false;
