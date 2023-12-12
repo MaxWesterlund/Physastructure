@@ -20,7 +20,7 @@ namespace Settings {
 
         public const int NodeSpreadRadius = 10;
 
-        public const int AgentAmount = 10000;
+        public const int AgentAmount = 5000;
         public const float AgentTurnAngle = 0.5f;
         public const float AgentSensorDistance = 5;
 

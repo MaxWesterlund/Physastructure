@@ -179,8 +179,8 @@ static class Program {
             }
         }
         
-        Raylib.DrawText("FPS: " + Raylib.GetFPS().ToString(), 10, 10, 20, Window.TextColor);
-        Raylib.DrawText("Step: " + step, 10, 40, 20, Window.TextColor);
+        // Raylib.DrawText("FPS: " + Raylib.GetFPS().ToString(), 10, 10, 20, Window.TextColor);
+        // Raylib.DrawText("Step: " + step, 10, 40, 20, Window.TextColor);
 
         Raylib.EndDrawing();
     }
