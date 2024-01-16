@@ -47,17 +47,17 @@ public class Agent {
         }
         
         Vector2 wantedPos = position + direction;
-        int tries = 0;
+        Vector2 center = new Vector2(Simulation.Size / 2, Simulation.Size / 2);
+        int steps = 0;
         while (!Utils.IsWithinBounds(wantedPos)) {
-            Vector2 center = new Vector2(Simulation.Size / 2, Simulation.Size / 2);
-            if (tries == 3) {
+            if (steps == 3) {
                 wantedPos = center;
                 break;
             }
-            Vector2 normal = center - wantedPos;
+            Vector2 normal = -direction;
             direction = Vector2.Reflect(direction, normal);
             wantedPos = position + direction;
-            tries++;
+            steps++;
         }
         
         heading = MathF.Atan2(direction.Y, direction.X);

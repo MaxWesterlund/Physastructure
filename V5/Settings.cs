@@ -16,11 +16,10 @@ namespace Settings {
     class Simulation {
         public const int Size = 200;
 
-        public const int KernelRadius = 0;
-
-        public const int NodeSpreadRadius = 10;
+        public const int NodeSpreadRadius = 7;
 
         public const int AgentAmount = 5000;
+        public const int AgentsPerNode = 50;
         public const float AgentTurnAngle = 0.5f;
         public const float AgentSensorDistance = 5;
 
