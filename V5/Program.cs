@@ -16,9 +16,16 @@ static class Program {
         CoordinateData[,] grid = new CoordinateData[Simulation.Size, Simulation.Size];
         List<Agent> agents = new();
 
+        GenerateObstacles(grid);
+
         int step = 0;
 
         Raylib.InitWindow(Window.Size, Window.Size, "Physastructure");
+
+        Image img = Raylib.LoadImage("Assets/Terrain/test.png");
+        Raylib.ImageResize(ref img, Window.Size, Window.Size);
+        Texture2D tex = Raylib.LoadTextureFromImage(img);
+
         while (!Raylib.WindowShouldClose()) {
             Control();
             if (Raylib.IsKeyPressed(KeyboardKey.KEY_SPACE)) {
@@ -48,7 +55,7 @@ static class Program {
                 }
             }
 
-            Draw(grid, agents, step);
+            Draw(grid, agents, step, tex);
         }
         Raylib.CloseWindow();
     }
@@ -62,8 +69,17 @@ static class Program {
         }
     }
 
-    static void GenerateObstacles() {
-        
+    static void GenerateObstacles(CoordinateData[,] grid) {
+        Image image = Raylib.LoadImage("Assets/Terrain/test.png");
+        Raylib.ImageResize(ref image, Simulation.Size, Simulation.Size);
+        for (int y = 0; y < Simulation.Size; y++) {
+            for (int x = 0; x < Simulation.Size; x++) {
+                Color color = Raylib.GetImageColor(image, x, y);
+                if (color.G == Window.WaterColor.G) {
+                    grid[x, y].IsObstacle = true;
+                }
+            }
+        }
     }
 
     static void PlaceNodes(CoordinateData[,] grid, ref int count) {
@@ -107,10 +123,12 @@ static class Program {
         }
     }
 
-    static void Draw(CoordinateData[,] grid, List<Agent> agents, int step) {
+    static void Draw(CoordinateData[,] grid, List<Agent> agents, int step, Texture2D tex) {
         Raylib.BeginDrawing();
 
         Raylib.ClearBackground(Window.BackgroundColor);
+
+        Raylib.DrawTextureRec(tex, new Rectangle(0, 0, Window.Size, Window.Size), Vector2.Zero, new Color(255, 255, 255, 255));
 
         int length = Simulation.Size / Window.Resolution;
         int ratio = Window.Size / Simulation.Size;
@@ -121,6 +139,7 @@ static class Program {
                 float avgSpore = 0;
                 float avgNode = 0;
                 bool isNode = false;
+                bool isObstacle = false;
                 bool isOutOfBounds = false;
                 for (int y2 = 0; y2 < Window.Resolution; y2++) {
                     for (int x2 = 0; x2 < Window.Resolution; x2++) {
@@ -128,8 +147,12 @@ static class Program {
                         int yCoord = y * Window.Resolution + y2;
                         avgSpore += grid[xCoord, yCoord].SporeStrength;
                         avgNode += grid[xCoord, yCoord].NodeStrength;
-                        if (grid[xCoord, yCoord].IsNode) {
+                        CoordinateData data = grid[xCoord, yCoord];
+                        if (data.IsNode) {
                             isNode = true;
+                        }
+                        if (data.IsObstacle) {
+                            isObstacle = true;
                         }
                         if (!Utils.IsWithinBounds(new Vector2(xCoord, yCoord))) {
                             isOutOfBounds = true;
@@ -147,7 +170,7 @@ static class Program {
                     color = Window.NodeColor;
                 }
                 else if (!isOutOfBounds) {
-                    color = new Color(s, s, 0, 255);
+                    color = new Color(255, 255, 0, s);
                 }
                 else {
                     color = Window.BorderColor;

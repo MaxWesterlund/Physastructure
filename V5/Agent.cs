@@ -49,14 +49,17 @@ public class Agent {
         Vector2 wantedPos = position + direction;
         Vector2 center = new Vector2(Simulation.Size / 2, Simulation.Size / 2);
         int steps = 0;
-        while (!Utils.IsWithinBounds(wantedPos)) {
+        CoordinateData data = grid[(int)Math.Clamp(Math.Round(position.X), 0, Simulation.Size - 1), (int)Math.Clamp(Math.Round(position.Y), 0, Simulation.Size - 1)];
+        while (!Utils.IsWithinBounds(wantedPos) || data.IsObstacle) {       
             if (steps == 3) {
                 wantedPos = center;
                 break;
             }
             Vector2 normal = -direction;
             direction = Vector2.Reflect(direction, normal);
+            direction = DirectionFromAngle(heading);
             wantedPos = position + direction;
+            data = grid[(int)Math.Clamp(Math.Round(position.X), 0, Simulation.Size - 1), (int)Math.Clamp(Math.Round(position.Y), 0, Simulation.Size - 1)];
             steps++;
         }
         
