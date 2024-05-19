@@ -170,7 +170,7 @@ static class Program {
                     color = Window.NodeColor;
                 }
                 else if (!isOutOfBounds) {
-                    color = new Color(255, 255, 0, s);
+                    color = new Color(255, 0, 0, s);
                 }
                 else {
                     color = Window.BorderColor;
